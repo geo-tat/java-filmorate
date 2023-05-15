@@ -20,9 +20,10 @@ public class Film {
 
     private LocalDate releaseDate;
     @NotNull
-    private Duration duration;
+    @Min(0)
+    private long duration;
 
-    public Film(@NonNull String name, String description, LocalDate releaseDate, Duration duration) {
+    public Film(@NonNull String name, String description, LocalDate releaseDate, long duration) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;

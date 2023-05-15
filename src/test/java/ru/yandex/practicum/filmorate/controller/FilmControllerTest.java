@@ -24,7 +24,7 @@ class FilmControllerTest {
     public void addFilmTest() {
         // Given
         Film film = new Film("Iron man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                Duration.ofMinutes(120));
+                120);
         // When
         Film test = controller.addFilm(film);
         // Then
@@ -35,7 +35,7 @@ class FilmControllerTest {
     public void addFilmWhenNoName() {
         // Given
         Film film = new Film("", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                Duration.ofMinutes(120));
+                120);
         // When
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             controller.addFilm(film);
@@ -51,7 +51,7 @@ class FilmControllerTest {
                 "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss" +
                 "ssssssssssssssssssssssssssssssssssssssssssssssssssssss",
                 LocalDate.of(2008, 9, 21),
-                Duration.ofMinutes(120));
+                120);
         // When
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             controller.addFilm(film);
@@ -64,7 +64,7 @@ class FilmControllerTest {
     public void addFilmWhenOlder28_12_1895() {
         // Given
         Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(1008, 9, 21),
-                Duration.ofMinutes(120));
+                120);
         // When
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             controller.addFilm(film);
@@ -77,7 +77,7 @@ class FilmControllerTest {
     public void addFilmWhenDurationIsNegative() {
         // Given
         Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                Duration.ofMinutes(-120));
+                -120);
         // When
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             controller.addFilm(film);
@@ -90,7 +90,7 @@ class FilmControllerTest {
     public void updateFilmTest() {
         // Given
         Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                Duration.ofMinutes(120));
+                120);
         controller.addFilm(film);
         film.setName("Iron Man 2");
         // When
@@ -102,8 +102,8 @@ class FilmControllerTest {
     @Test
     public void updateFilmWhenWrongId() {
         // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                Duration.ofMinutes(120));
+        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9,
+                21),120);
         // When
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             controller.updateFilm(film);
@@ -116,9 +116,9 @@ class FilmControllerTest {
     public void getFilmsTest() {
         // Given
         Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                Duration.ofMinutes(120));
-        Film film2 = new Film("Iron Man 2", "Marvel Comics", LocalDate.of(2010, 9, 21),
-                Duration.ofMinutes(135));
+                120);
+        Film film2 = new Film("Iron Man 2", "Marvel Comics", LocalDate.of(2010, 9,
+                21),135);
         controller.addFilm(film);
         controller.addFilm(film2);
         List result = new ArrayList<>(List.of(film, film2));
