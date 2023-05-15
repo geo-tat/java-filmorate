@@ -28,7 +28,7 @@ public class UserController {
             log.error("Логин не может быть пустым и содержать пробелы");
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
-        if (user.getName() == null || user.getName().isEmpty() ) {
+        if (user.getName() == null || user.getName().isEmpty()) {
             user.setName(user.getLogin());
             log.info("Имя для отображения может быть пустым — в таком случае будет использован логин");
         }
