@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +102,7 @@ class FilmControllerTest {
     public void updateFilmWhenWrongId() {
         // Given
         Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9,
-                21),120);
+                21), 120);
         // When
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             controller.updateFilm(film);
@@ -118,7 +117,7 @@ class FilmControllerTest {
         Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
                 120);
         Film film2 = new Film("Iron Man 2", "Marvel Comics", LocalDate.of(2010, 9,
-                21),135);
+                21), 135);
         controller.addFilm(film);
         controller.addFilm(film2);
         List result = new ArrayList<>(List.of(film, film2));
