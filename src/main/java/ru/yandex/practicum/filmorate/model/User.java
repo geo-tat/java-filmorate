@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Data
@@ -16,7 +15,6 @@ public class User {
     @NotBlank
     private String login;
     private String name;
-    @Past
     private LocalDate birthday;
 
     public User(String email, String login, String name, LocalDate birthday) {
