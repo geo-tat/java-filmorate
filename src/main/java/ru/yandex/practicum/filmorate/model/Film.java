@@ -8,7 +8,6 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
-
 public class Film {
     private int id;
     @NonNull
@@ -16,13 +15,11 @@ public class Film {
     private String name;
     @Size(max = 200)
     private String description;
-
-    private LocalDate releaseDate;
     @NotNull
-    @Min(0)
+    private LocalDate releaseDate;
     private long duration;
 
-    public Film(@NonNull String name, String description, LocalDate releaseDate, long duration) {
+    public Film(String name, String description, LocalDate releaseDate, long duration) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
