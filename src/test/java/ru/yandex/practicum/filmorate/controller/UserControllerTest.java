@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -107,8 +106,8 @@ class UserControllerTest {
         controller.addUser(user1);
         List<User> test = new ArrayList<User>(List.of(user, user1));
         // When
-        Collection result = controller.getUsers();
+        List result = controller.getUsers();
         // Then
-        assertArrayEquals(test.toArray(), result.toArray());
+        assertEquals(test, result);
     }
 }

@@ -8,8 +8,9 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -44,29 +45,17 @@ public class UserController {
     @PutMapping("/users")
     public User updateUser(@Valid @RequestBody User user) {
         if (users.containsKey(user.getId())) {
-            if (user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
-                log.error("Электронная почта не может быть пустой и должна содержать символ @");
-                throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
-            }
-            if (user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
-                log.error("Логин не может быть пустым и содержать пробелы");
-                throw new ValidationException("Логин не может быть пустым и содержать пробелы");
-            }
-            if (user.getName() == null || user.getName().isEmpty()) {
-                user.setName(user.getLogin());
-                log.info("Имя для отображения может быть пустым — в таком случае будет использован логин");
-            }
             users.put(user.getId(), user);
             return user;
         } else {
-            log.info("Пользователя с таким ID не существует: {}",user.getId());
+            log.info("Пользователя с таким ID не существует");
             throw new ValidationException("Пользователя с таким ID не существует");
         }
 
     }
 
     @GetMapping("/users")
-    public Collection getUsers() {
-        return users.values();
+    public List getUsers() {
+        return new ArrayList<User>(users.values());
     }
 }

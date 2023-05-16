@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -121,10 +120,10 @@ class FilmControllerTest {
                 21), 135);
         controller.addFilm(film);
         controller.addFilm(film2);
-        Collection<Film> result = new ArrayList<>(List.of(film, film2));
+        List result = new ArrayList<>(List.of(film, film2));
         // When
-        Collection test = controller.getFilms();
+        List test = controller.getFilms();
         // Then
-        assertArrayEquals(result.toArray(), test.toArray());
+        assertEquals(result, test);
     }
 }
