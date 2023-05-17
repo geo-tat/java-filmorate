@@ -39,7 +39,7 @@ public class FilmController {
     }
 
     @GetMapping("/films")
-    public Collection getFilms() {
+    public Collection<Film> getFilms() {
         return films.values();
     }
 

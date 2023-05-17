@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Collection getUsers() {
+    public Collection<User> getUsers() {
         return users.values();
     }
 
