@@ -4,12 +4,14 @@ import lombok.Data;
 import lombok.NonNull;
 
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Valid
 public class Film {
     private int id;
     @NonNull
