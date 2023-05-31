@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
@@ -30,6 +31,9 @@ public class FilmService {
 
     public void removeLike(int filmID, int userID) {
         Film film = storage.getFilmById(filmID);
+        if (!film.getLikes().contains(userID)) {
+            throw new UserNotFoundException("Пользователь с ID: " + filmID + " - не ставил лайк.");
+        }
         film.getLikes().remove(userID);
     }
 

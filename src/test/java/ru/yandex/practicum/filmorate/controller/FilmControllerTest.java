@@ -163,7 +163,7 @@ class FilmControllerTest {
             controller.getFilmById(33);
         });
         // Then
-        assertEquals("Фильма с таким ID не существует.", exception.getMessage());
+        assertEquals("Фильм c Id: 33 не найден.", exception.getMessage());
     }
 
     @Test

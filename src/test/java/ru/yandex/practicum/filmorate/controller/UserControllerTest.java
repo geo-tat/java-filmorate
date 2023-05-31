@@ -143,7 +143,7 @@ class UserControllerTest {
             controller.getUserById(33);
         });
         // Then
-        assertEquals("Пользователя с таким ID не существует.", exception.getMessage());
+        assertEquals("Пользователь c Id: 33 не найден.", exception.getMessage());
     }
 
     @Test
