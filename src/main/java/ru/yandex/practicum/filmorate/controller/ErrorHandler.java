@@ -14,7 +14,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFoundException(final UserNotFoundException e) {
-        log.error("Пользователь с данным ID не найден.");
+        log.error("Пользователь с данным ID не найден.", e);
         return new ErrorResponse(
                 e.getMessage()
         );
@@ -23,7 +23,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleFilmNotFoundException(final FilmNotFoundException e) {
-        log.error("Фильма с данным ID не найден.");
+        log.error("Фильма с данным ID не найден.", e);
         return new ErrorResponse(
                 e.getMessage()
         );
