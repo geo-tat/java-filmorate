@@ -12,7 +12,5 @@ public interface FilmStorage {
 
     Collection<Film> getFilms();
 
-    void clear();
-
     Film getFilmById(int id);
 }

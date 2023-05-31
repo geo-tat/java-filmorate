@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -18,7 +17,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        userValidation(user);
         userId++;
         user.setId(userId);
         users.put(userId, user);
@@ -28,7 +26,6 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User user) {
         if (users.containsKey(user.getId())) {
-            userValidation(user);
             users.put(user.getId(), user);
             return user;
         } else {
@@ -52,28 +49,8 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
-    @Override
     public void clear() {
         users.clear();
         userId = 0;
-    }
-
-    private void userValidation(User user) {
-        if (user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
-            log.error("Электронная почта не может быть пустой и должна содержать символ @");
-            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
-        }
-        if (user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
-            log.error("Логин не может быть пустым и содержать пробелы");
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
-        }
-        if (user.getName() == null || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
-            log.info("Имя для отображения может быть пустым — в таком случае будет использован логин");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.error("Дата рождения не может быть в будущем!");
-            throw new ValidationException("Дата рождения не может быть в будущем!");
-        }
     }
 }

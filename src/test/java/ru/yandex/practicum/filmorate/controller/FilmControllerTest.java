@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class FilmControllerTest {
     FilmController controller;
+    @Autowired
+    InMemoryFilmStorage storage;
 
     @Autowired
     public FilmControllerTest(FilmController controller) {
@@ -27,7 +30,7 @@ class FilmControllerTest {
 
     @BeforeEach
     void setUp() {
-        controller.storage.clear();
+        storage.clear();
 
     }
 

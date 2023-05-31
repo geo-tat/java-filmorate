@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -16,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserControllerTest {
-    private UserController controller;
+    private final UserController controller;
     @Autowired
-    private UserStorage storage;
+    private InMemoryUserStorage storage;
 
 
     @BeforeEach

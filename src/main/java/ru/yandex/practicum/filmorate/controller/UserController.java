@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -13,29 +12,32 @@ import java.util.Set;
 
 @RestController
 public class UserController {
-    @Autowired
-    UserStorage storage;
-    @Autowired
+
     UserService service;
+
+    @Autowired
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @PostMapping("/users")
     public User addUser(@Valid @RequestBody User user) {
-        return storage.addUser(user);
+        return service.addUser(user);
     }
 
     @PutMapping("/users")
     public User updateUser(@Valid @RequestBody User user) {
-        return storage.updateUser(user);
+        return service.updateUser(user);
     }
 
     @GetMapping("/users")
     public Collection<User> getUsers() {
-        return storage.getUsers();
+        return service.getUsers();
     }
 
     @GetMapping("/users/{id}")
     public User getUserById(@PathVariable int id) {
-        return storage.getUserById(id);
+        return service.getUserById(id);
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")

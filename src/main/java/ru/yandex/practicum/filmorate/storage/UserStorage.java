@@ -14,6 +14,4 @@ public interface UserStorage {
     Collection<User> getUsers();
 
     User getUserById(int id);
-
-    void clear();
 }
