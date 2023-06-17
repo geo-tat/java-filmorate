@@ -1,9 +1,14 @@
 package ru.yandex.practicum.filmorate.controller;
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,12 +17,21 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class FilmControllerTest {
     FilmController controller;
+    @Autowired
+    InMemoryFilmStorage storage;
+
+    @Autowired
+    public FilmControllerTest(FilmController controller) {
+        this.controller = controller;
+    }
 
     @BeforeEach
     void setUp() {
-        controller = new FilmController();
+        storage.clear();
+
     }
 
     @Test
@@ -37,9 +51,7 @@ class FilmControllerTest {
         Film film = new Film("", "Marvel Comics", LocalDate.of(2008, 9, 21),
                 120);
         // When
-        ValidationException exception = assertThrows(ValidationException.class, () -> {
-            controller.addFilm(film);
-        });
+        ValidationException exception = assertThrows(ValidationException.class, () -> controller.addFilm(film));
         // Then
         assertEquals("Название не может быть пустым", exception.getMessage());
     }
@@ -126,5 +138,77 @@ class FilmControllerTest {
         Collection test = controller.getFilms();
         // Then
         assertArrayEquals(result.toArray(), test.toArray());
+    }
+
+    @Test
+    public void getFilmByIdTest() {
+        // Given
+        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
+                120);
+        controller.addFilm(film);
+        // When
+        Film result = controller.getFilmById(1);
+        // Then
+        assertEquals(1, film.getId());
+        assertEquals(film, result);
+    }
+
+    @Test
+    public void getFilmWrongId() {
+        // Given
+
+        // When
+
+        FilmNotFoundException exception = assertThrows(FilmNotFoundException.class, () -> {
+            controller.getFilmById(33);
+        });
+        // Then
+        assertEquals("Фильм c Id: 33 не найден.", exception.getMessage());
+    }
+
+    @Test
+    public void addLikeTest() {
+        // Given
+        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
+                120);
+        controller.addFilm(film);
+        // When
+        controller.addLike(1, 1);
+        // Then
+        assertEquals(1, film.getLikes().size());
+    }
+
+    @Test
+    public void removeLikeTest() {
+        // Given
+        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
+                120);
+        controller.addFilm(film);
+        controller.addLike(1, 1);
+        // When
+        controller.deleteLike(1, 1);
+        // Then
+        assertEquals(0, film.getLikes().size());
+    }
+
+    @Test
+    public void getTopPopularFilms() {
+        // Given
+        Film ironMan = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
+                120);
+        Film spiderMan = new Film("Spider Man", "Marvel Comics", LocalDate.of(20015, 9, 21),
+                148);
+        controller.addFilm(ironMan);
+        controller.addFilm(spiderMan);
+        controller.addLike(1, 1);
+        controller.addLike(1, 2);
+        controller.addLike(2, 4);
+        controller.addLike(2, 3);
+        controller.addLike(2, 5);
+        // When
+        List<Film> test = controller.topPopularFilms(2);
+        List<Film> result = new ArrayList<>(List.of(spiderMan, ironMan));
+        // Then
+        assertEquals(result, test);
     }
 }
