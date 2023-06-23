@@ -14,4 +14,8 @@ public interface UserStorage {
     Collection<User> getUsers();
 
     User getUserById(int id);
+
+    boolean deleteUser(int id);
+
+
 }

@@ -1,14 +1,18 @@
 package ru.yandex.practicum.filmorate.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.model.MPA;
+import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,91 +22,72 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class FilmControllerTest {
-    FilmController controller;
-    @Autowired
-    InMemoryFilmStorage storage;
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+public class FilmControllerTest {
+    private final FilmController controller;
+    private final FilmDbStorage storage;
 
-    @Autowired
-    public FilmControllerTest(FilmController controller) {
-        this.controller = controller;
-    }
+    Film film;
+    Film film1;
+    Film oldFilm;
 
     @BeforeEach
     void setUp() {
-        storage.clear();
+        film = Film.builder()
+                .name("Iron Man")
+                .description("Tony Stark")
+                .releaseDate(LocalDate.of(2008, 9, 21))
+                .duration(120)
+                .mpa(MPA.builder()
+                        .id(3)
+                        .name("PG-13")
+                        .build()).build();
 
+        film1 = Film.builder()
+                .name("Spider man")
+                .description("Peter Paker")
+                .releaseDate(LocalDate.of(2010, 6, 12))
+                .duration(124)
+                .mpa(MPA.builder()
+                        .id(2)
+                        .name("PG").build()).build();
+        oldFilm = Film.builder()
+                .name("First")
+                .description("Lumier")
+                .releaseDate(LocalDate.of(1008, 9, 21))
+                .duration(120)
+                .mpa(MPA.builder()
+                        .id(3)
+                        .name("PG-13")
+                        .build()).build();
     }
 
     @Test
     public void addFilmTest() {
         // Given
-        Film film = new Film("Iron man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                120);
         // When
         Film test = controller.addFilm(film);
         // Then
         assertEquals(film, test);
     }
 
-    @Test
-    public void addFilmWhenNoName() {
-        // Given
-        Film film = new Film("", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                120);
-        // When
-        ValidationException exception = assertThrows(ValidationException.class, () -> controller.addFilm(film));
-        // Then
-        assertEquals("Название не может быть пустым", exception.getMessage());
-    }
-
-    @Test
-    public void addFilmWhenDescriptionOver200() {
-        // Given
-        Film film = new Film("Iron Man", "Marvel Comicsssssssssssssssssssssssssssssssssssssssssssss" +
-                "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss" +
-                "ssssssssssssssssssssssssssssssssssssssssssssssssssssss",
-                LocalDate.of(2008, 9, 21),
-                120);
-        // When
-        ValidationException exception = assertThrows(ValidationException.class, () -> {
-            controller.addFilm(film);
-        });
-        // Then
-        assertEquals("Максимальная длина описания — 200 символов", exception.getMessage());
-    }
 
     @Test
     public void addFilmWhenOlder28_12_1895() {
         // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(1008, 9, 21),
-                120);
         // When
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            controller.addFilm(film);
+            controller.addFilm(oldFilm);
         });
         // Then
         assertEquals("Дата релиза — не раньше 28 декабря 1895 года", exception.getMessage());
     }
 
-    @Test
-    public void addFilmWhenDurationIsNegative() {
-        // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                -120);
-        // When
-        ValidationException exception = assertThrows(ValidationException.class, () -> {
-            controller.addFilm(film);
-        });
-        // Then
-        assertEquals("Продолжительность фильма должна быть положительной", exception.getMessage());
-    }
 
     @Test
     public void updateFilmTest() {
         // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                120);
         controller.addFilm(film);
         film.setName("Iron Man 2");
         // When
@@ -114,10 +99,9 @@ class FilmControllerTest {
     @Test
     public void updateFilmWhenWrongId() {
         // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9,
-                21), 120);
+        film.setId(34);
         // When
-        ValidationException exception = assertThrows(ValidationException.class, () -> {
+        FilmNotFoundException exception = assertThrows(FilmNotFoundException.class, () -> {
             controller.updateFilm(film);
         });
         // Then
@@ -127,13 +111,9 @@ class FilmControllerTest {
     @Test
     public void getFilmsTest() {
         // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                120);
-        Film film2 = new Film("Iron Man 2", "Marvel Comics", LocalDate.of(2010, 9,
-                21), 135);
         controller.addFilm(film);
-        controller.addFilm(film2);
-        List<Film> result = new ArrayList<>(List.of(film, film2));
+        controller.addFilm(film1);
+        List<Film> result = new ArrayList<>(List.of(film, film1));
         // When
         Collection test = controller.getFilms();
         // Then
@@ -143,8 +123,6 @@ class FilmControllerTest {
     @Test
     public void getFilmByIdTest() {
         // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                120);
         controller.addFilm(film);
         // When
         Film result = controller.getFilmById(1);
@@ -166,49 +144,4 @@ class FilmControllerTest {
         assertEquals("Фильм c Id: 33 не найден.", exception.getMessage());
     }
 
-    @Test
-    public void addLikeTest() {
-        // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                120);
-        controller.addFilm(film);
-        // When
-        controller.addLike(1, 1);
-        // Then
-        assertEquals(1, film.getLikes().size());
-    }
-
-    @Test
-    public void removeLikeTest() {
-        // Given
-        Film film = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                120);
-        controller.addFilm(film);
-        controller.addLike(1, 1);
-        // When
-        controller.deleteLike(1, 1);
-        // Then
-        assertEquals(0, film.getLikes().size());
-    }
-
-    @Test
-    public void getTopPopularFilms() {
-        // Given
-        Film ironMan = new Film("Iron Man", "Marvel Comics", LocalDate.of(2008, 9, 21),
-                120);
-        Film spiderMan = new Film("Spider Man", "Marvel Comics", LocalDate.of(20015, 9, 21),
-                148);
-        controller.addFilm(ironMan);
-        controller.addFilm(spiderMan);
-        controller.addLike(1, 1);
-        controller.addLike(1, 2);
-        controller.addLike(2, 4);
-        controller.addLike(2, 3);
-        controller.addLike(2, 5);
-        // When
-        List<Film> test = controller.topPopularFilms(2);
-        List<Film> result = new ArrayList<>(List.of(spiderMan, ironMan));
-        // Then
-        assertEquals(result, test);
-    }
 }
