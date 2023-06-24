@@ -57,7 +57,7 @@ public class GenreDbStorage implements GenreStorage {
         return film;
     }
 
-    public List<Genre> getGenresByFilmId(int film_id) {
+    public List<Genre> getGenresByFilmId(int filmId) {
         String sql = "SELECT g.genre_id AS genre_id, g.name " +
                 "FROM genre g " +
                 "LEFT JOIN film_genre fg ON fg.genre_id = g.genre_id " +
@@ -65,7 +65,7 @@ public class GenreDbStorage implements GenreStorage {
         List<Genre> result = new ArrayList<>(jdbcTemplate.query(sql, (rs, num) -> Genre.builder()
                 .id(rs.getInt("genre.genre_id"))
                 .name(rs.getString("genre.name"))
-                .build(), film_id)
+                .build(), filmId)
         );
         result.sort(Comparator.comparingInt(Genre::getId));
         return result;
