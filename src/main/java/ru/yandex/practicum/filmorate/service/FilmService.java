@@ -55,15 +55,14 @@ public class FilmService {
     public Film addFilm(Film film) {
         filmValidation(film);
         Film result = storage.addFilm(film);
-
         return genre.updateGenre(result);
     }
 
     public Film updateFilm(Film film) {
         filmValidation(film);
-        return storage.updateFilm(film);
+        Film updatedFilm = storage.updateFilm(film);
+        return genre.updateGenre(updatedFilm);
     }
-
     public Collection<Film> getFilms() {
         Collection<Film> films = storage.getFilms();
         films.forEach(film -> film.setGenres(genre.getGenresByFilmId(film.getId())));
@@ -77,6 +76,14 @@ public class FilmService {
     }
 
     private void filmValidation(Film film) {
+        if (film.getName().isEmpty()) {
+            log.error("Название фильма не указано");
+            throw new ValidationException("Название не может быть пустым");
+        }
+        if (film.getDescription().length() > 200) {
+            log.error("У фильма очень длинное описание!");
+            throw new ValidationException("Максимальная длина описания — 200 символов");
+        }
         if (film.getReleaseDate().isBefore(FIRST_MOVIE_EVER)) {
             log.error("Слишком старый фильм");
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");

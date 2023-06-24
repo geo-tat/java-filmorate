@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FriendDbStorageTest {
     private final UserController controller;
 
@@ -66,9 +68,9 @@ public class FriendDbStorageTest {
 
     @Test
     public void deleteFriendTest() {
-        //   controller.addFriend(1,2);
+           controller.addFriend(1,2);
         controller.deleteFriend(1, 2);
-        controller.deleteFriend(1, 3);
+  //      controller.deleteFriend(1, 3);
         int friendCount = controller.getFriends(1).size();
         assertThat(friendCount).isEqualTo(0);
     }
