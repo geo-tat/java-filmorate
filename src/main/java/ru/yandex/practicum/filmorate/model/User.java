@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @Valid
+@Builder
 public class User {
     private int id;
     @NotBlank
