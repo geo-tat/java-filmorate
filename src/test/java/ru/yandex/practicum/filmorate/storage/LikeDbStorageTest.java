@@ -28,10 +28,18 @@ public class LikeDbStorageTest {
 
     @BeforeEach
     public void setUp() {
-        User user = new User("andy@gmail.com", "IronMan", "Andrew"
-                , LocalDate.of(1990, 4, 22));
-        User user1 = new User("gabriel@gmail.com", "Gaby", "Gabriel",
-                LocalDate.of(1995, 11, 12));
+        User user = User.builder()
+                .email("andy@gmail.com")
+                .login("IronMan")
+                .name("Andrew")
+                .birthday(LocalDate.of(1990, 4, 22))
+                .build();
+        User user1 = User.builder()
+                .email("gabriel@gmail.com")
+                .login("Gaby")
+                .name("Gabriel")
+                .birthday(LocalDate.of(1995, 11, 12))
+                .build();
         Film film = Film.builder()
                 .name("Iron Man")
                 .description("Tony Stark")
@@ -56,7 +64,7 @@ public class LikeDbStorageTest {
     }
 
     @Test
-    public void LikeTest() {
+    public void likeTest() {
         filmController.addLike(1, 1);
         filmController.addLike(1, 2);
         filmController.addLike(2, 1);
