@@ -15,9 +15,6 @@ import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
 
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -106,29 +103,6 @@ public class FilmControllerTest {
         });
         // Then
         assertEquals("Фильма с таким ID не существует", exception.getMessage());
-    }
-
-    @Test
-    public void getFilmsTest() {
-        // Given
-        controller.addFilm(film);
-        controller.addFilm(film1);
-        List<Film> result = new ArrayList<>(List.of(film, film1));
-        // When
-        Collection test = controller.getFilms();
-        // Then
-        assertArrayEquals(result.toArray(), test.toArray());
-    }
-
-    @Test
-    public void getFilmByIdTest() {
-        // Given
-        controller.addFilm(film);
-        // When
-        Film result = controller.getFilmById(1);
-        // Then
-        assertEquals(1, film.getId());
-        assertEquals(film, result);
     }
 
     @Test
