@@ -63,6 +63,7 @@ public class FilmService {
         Film updatedFilm = storage.updateFilm(film);
         return genre.updateGenre(updatedFilm);
     }
+
     public Collection<Film> getFilms() {
         Collection<Film> films = storage.getFilms();
         films.forEach(film -> film.setGenres(genre.getGenresByFilmId(film.getId())));

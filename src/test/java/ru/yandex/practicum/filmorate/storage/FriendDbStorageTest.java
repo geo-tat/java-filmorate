@@ -68,9 +68,9 @@ public class FriendDbStorageTest {
 
     @Test
     public void deleteFriendTest() {
-           controller.addFriend(1,2);
+        controller.addFriend(1, 2);
         controller.deleteFriend(1, 2);
-  //      controller.deleteFriend(1, 3);
+
         int friendCount = controller.getFriends(1).size();
         assertThat(friendCount).isEqualTo(0);
     }
