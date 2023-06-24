@@ -51,9 +51,7 @@ public class GenreDbStorage implements GenreStorage {
         List<Genre> genresNew = new ArrayList<>(genreMap.values());
         for (Genre genre : genresNew) {
             String sqlInsert = "INSERT INTO film_genre (film_id, genre_id) VALUES (?,?) ";
-            jdbcTemplate.update(sqlInsert
-                    , id
-                    , genre.getId());
+            jdbcTemplate.update(sqlInsert, id, genre.getId());
         }
         film.setGenres(genresNew);
         return film;
@@ -64,12 +62,10 @@ public class GenreDbStorage implements GenreStorage {
                 "FROM genre g " +
                 "LEFT JOIN film_genre fg ON fg.genre_id = g.genre_id " +
                 "WHERE fg.film_id = ?";
-        List<Genre> result = new ArrayList<>(jdbcTemplate.query(
-                sql,
-                (rs, num) -> Genre.builder().
-                        id(rs.getInt("genre.genre_id"))
-                        .name(rs.getString("genre.name"))
-                        .build(), film_id)
+        List<Genre> result = new ArrayList<>(jdbcTemplate.query(sql, (rs, num) -> Genre.builder()
+                .id(rs.getInt("genre.genre_id"))
+                .name(rs.getString("genre.name"))
+                .build(), film_id)
         );
         result.sort(Comparator.comparingInt(Genre::getId));
         return result;
