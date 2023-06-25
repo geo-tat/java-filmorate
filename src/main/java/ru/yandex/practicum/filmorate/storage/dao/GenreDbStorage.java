@@ -12,6 +12,8 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
@@ -23,7 +25,7 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public Collection<Genre> getAllGenres() {
         String sql = "SELECT * FROM genre ORDER BY genre_id ASC";
-        return jdbcTemplate.query(sql, new GenreMapper());
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Override
@@ -57,17 +59,23 @@ public class GenreDbStorage implements GenreStorage {
         return film;
     }
 
-    public List<Genre> getGenresByFilmId(int filmId) {
-        String sql = "SELECT g.genre_id AS genre_id, g.name " +
-                "FROM genre g " +
-                "LEFT JOIN film_genre fg ON fg.genre_id = g.genre_id " +
-                "WHERE fg.film_id = ?";
-        List<Genre> result = new ArrayList<>(jdbcTemplate.query(sql, (rs, num) -> Genre.builder()
-                .id(rs.getInt("genre.genre_id"))
-                .name(rs.getString("genre.name"))
-                .build(), filmId)
-        );
-        result.sort(Comparator.comparingInt(Genre::getId));
-        return result;
+    public List<Film> loadGenresForFilm(Collection<Film> films) {
+        List<Integer> filmIds = films.stream()
+                .map(Film::getId).collect(Collectors.toList());
+        Map<Integer, Film> filmMap = films.stream().collect(Collectors.toMap(Film::getId, film -> film));
+        String sql = "SELECT fg.genre_id, g.name  " +
+                "FROM film_genre AS fg " +
+                "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
+                "WHERE film_id = ?";
+        for (Integer id : filmIds) {
+            jdbcTemplate.query(sql, (rs) -> {
+                        int genreId = rs.getInt("genre_id");
+                        String genreName = rs.getString("name");
+                        filmMap.get(id).getGenres().add(Genre.builder().id(genreId).name(genreName).build());
+                    }, id
+            );
+
+        }
+        return new ArrayList<>(films);
     }
 }

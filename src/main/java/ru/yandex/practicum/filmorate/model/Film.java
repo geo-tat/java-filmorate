@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 
@@ -14,7 +13,6 @@ import java.util.List;
 @Data
 @Valid
 @Builder
-@EqualsAndHashCode(of = "id")
 public class Film {
     private int id;
     @NonNull

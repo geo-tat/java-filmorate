@@ -67,21 +67,17 @@ public class FilmDbStorage implements FilmStorage {
         String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
                 "FROM film AS f " +
                 "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
-                "LEFT JOIN film_genre AS fg ON fg.film_id = f.film_id " +
-                "LEFT JOIN genre AS g ON g.genre_id = fg.genre_id " +
                 "GROUP BY f.film_id";
         return jdbcTemplate.query(sql, mapper);
     }
 
     @Override
     public Film getFilmById(int id) {
-        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name, g.genre_id, g.name " +
+        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
                 "FROM film AS f " +
                 "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
-                "LEFT JOIN film_genre AS fg ON fg.film_id = f.film_id " +
-                "LEFT JOIN genre AS g ON g.genre_id = fg.genre_id " +
                 "WHERE f.film_id = ? " +
-                "GROUP BY f.film_id, g.genre_id";
+                "GROUP BY f.film_id";
         return jdbcTemplate.query(sql, mapper, id)
                 .stream()
                 .findAny()

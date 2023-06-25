@@ -1,9 +1,3 @@
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS film CASCADE;
-DROP TABLE IF EXISTS user_friend;
-DROP TABLE IF EXISTS film_user_like;
-DROP TABLE IF EXISTS film_genre;
-
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -34,7 +28,7 @@ CREATE TABLE IF NOT EXISTS film
 
 CREATE TABLE IF NOT EXISTS genre
 (
-    genre_id int UNIQUE PRIMARY KEY AUTO_INCREMENT,
+    genre_id int PRIMARY KEY AUTO_INCREMENT,
     name     varchar UNIQUE
 );
 
@@ -42,11 +36,11 @@ CREATE TABLE IF NOT EXISTS film_genre
 (
     film_id  int,
     genre_id int,
+    CONSTRAINT pk_film_genre PRIMARY KEY (film_id, genre_id),
     CONSTRAINT genre_fk
     FOREIGN KEY (film_id) REFERENCES film(film_id),
     CONSTRAINT genre_fk_two
-    FOREIGN KEY (genre_id) REFERENCES genre(genre_id),
-    UNIQUE (film_id, genre_id)
+    FOREIGN KEY (genre_id) REFERENCES genre(genre_id)
     );
 
 CREATE TABLE IF NOT EXISTS user_friend
@@ -62,7 +56,7 @@ CREATE TABLE IF NOT EXISTS film_user_like
 (
     film_id int,
     user_id int,
+    CONSTRAINT pk_ful PRIMARY KEY (film_id, user_id),
     FOREIGN KEY (film_id) REFERENCES film (film_id),
-    FOREIGN KEY (user_id) REFERENCES users (user_id),
-    UNIQUE (film_id, user_id)
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
     );

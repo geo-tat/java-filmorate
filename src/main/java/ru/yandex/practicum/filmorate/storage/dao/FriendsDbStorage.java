@@ -38,7 +38,7 @@ public class FriendsDbStorage implements FriendsStorage {
                 "JOIN user_friend AS u1 ON u.user_id = u1.friend_id " +
                 "JOIN user_friend AS u2 ON u1.friend_id = u2.friend_id " +
                 "WHERE u1.user_id = ? AND u2.user_id = ?";
-        return new ArrayList<>(jdbcTemplate.query(sql, new UserMapper(), userId, friendId));
+        return jdbcTemplate.query(sql, new UserMapper(), userId, friendId);
     }
 
     @Override
