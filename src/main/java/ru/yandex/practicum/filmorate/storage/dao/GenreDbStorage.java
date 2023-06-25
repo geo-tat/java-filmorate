@@ -14,6 +14,8 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.function.Function.identity;
+
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
@@ -60,22 +62,17 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     public List<Film> loadGenresForFilm(Collection<Film> films) {
-        List<Integer> filmIds = films.stream()
-                .map(Film::getId).collect(Collectors.toList());
-        Map<Integer, Film> filmMap = films.stream().collect(Collectors.toMap(Film::getId, film -> film));
-        String sql = "SELECT fg.genre_id, g.name  " +
+        Map<Integer, Film> filmMap = films.stream().collect(Collectors.toMap(Film::getId, identity()));
+        String sql = "SELECT fg.film_id, fg.genre_id, g.name " +
                 "FROM film_genre AS fg " +
                 "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
-                "WHERE film_id = ?";
-        for (Integer id : filmIds) {
-            jdbcTemplate.query(sql, (rs) -> {
-                        int genreId = rs.getInt("genre_id");
-                        String genreName = rs.getString("name");
-                        filmMap.get(id).getGenres().add(Genre.builder().id(genreId).name(genreName).build());
-                    }, id
-            );
-
-        }
+                "WHERE fg.film_id IN (" + String.join(",", Collections.nCopies(films.size(), "?")) + ")";
+        jdbcTemplate.query(sql, (rs) -> {
+            filmMap.get(rs.getInt("film_id")).getGenres().add(Genre.builder()
+                    .id(rs.getInt("genre_id"))
+                    .name(rs.getString("name"))
+                    .build());
+        }, filmMap.keySet().toArray());
         return new ArrayList<>(films);
     }
 }
