@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.Set;
 
 @RestController
 public class UserController {
@@ -40,6 +39,11 @@ public class UserController {
         return service.getUserById(id);
     }
 
+    @DeleteMapping("/users/{id}")
+    public boolean deleteUser(@PathVariable int id) {
+        return service.deleteUser(id);
+    }
+
     @PutMapping("/users/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
         service.addFriend(id, friendId);
@@ -50,14 +54,15 @@ public class UserController {
         service.deleteFriend(id, friendId);
     }
 
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+        return service.getCommonFriends(id, otherId);
+    }
+
     @GetMapping("/users/{id}/friends")
     public Collection<User> getFriends(@PathVariable int id) {
         return service.getFriends(id);
     }
 
-    @GetMapping("/users/{id}/friends/common/{otherId}")
-    public Set<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
-        return service.getCommonFriends(id, otherId);
-    }
 
 }
