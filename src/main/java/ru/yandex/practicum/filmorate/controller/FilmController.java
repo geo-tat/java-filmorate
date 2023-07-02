@@ -55,4 +55,9 @@ public class FilmController {
         return service.getTopFilms(count);
     }
 
+    @GetMapping("/films/search")
+    public List<Film> search(@RequestParam String query, @RequestParam List<String> by) {
+        return service.search(query, by);
+    }
+
 }

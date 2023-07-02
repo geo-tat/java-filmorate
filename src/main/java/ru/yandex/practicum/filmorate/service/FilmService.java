@@ -73,6 +73,10 @@ public class FilmService {
         return genre.loadGenresForFilm(List.of(film)).get(0);
     }
 
+    public List<Film> search (String query, List<String> by) {
+        return storage.search(query, by);
+    }
+
     private void filmValidation(Film film) {
         if (film.getName().isEmpty()) {
             log.error("Название фильма не указано");

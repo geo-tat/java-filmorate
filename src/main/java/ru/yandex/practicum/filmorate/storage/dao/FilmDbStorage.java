@@ -83,4 +83,8 @@ public class FilmDbStorage implements FilmStorage {
                 .findAny()
                 .orElseThrow(() -> new FilmNotFoundException("Фильм c Id: " + id + " не найден."));
     }
+
+    public List<Film> search(String query, List<String> by) {
+        return null;
+    }
 }
