@@ -45,6 +45,7 @@ public class GenreDbStorage implements GenreStorage {
         String sql = "DELETE FROM film_genre WHERE film_id = ?";
         jdbcTemplate.update(sql, id);
         if (film.getGenres() == null || film.getGenres().isEmpty()) {
+            film.setGenres(new ArrayList<>());
             return film;
         }
         List<Genre> genres = film.getGenres();
