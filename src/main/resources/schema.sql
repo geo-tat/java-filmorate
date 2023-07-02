@@ -60,3 +60,24 @@ CREATE TABLE IF NOT EXISTS film_user_like
     FOREIGN KEY (film_id) REFERENCES film (film_id),
     FOREIGN KEY (user_id) REFERENCES users (user_id)
     );
+
+
+CREATE TABLE IF NOT EXISTS director
+(
+    director_id int PRIMARY KEY AUTO_INCREMENT,
+    name     varchar UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS film_director
+(
+    film_id  int,
+    director_id int,
+    CONSTRAINT pk_film_director PRIMARY KEY (film_id, director_id),
+    CONSTRAINT director_fk
+    FOREIGN KEY (film_id) REFERENCES film(film_id),
+    CONSTRAINT director_fk_two
+    FOREIGN KEY (director_id) REFERENCES director(director_id)
+    );
+
+
+
