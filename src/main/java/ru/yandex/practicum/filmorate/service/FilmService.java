@@ -68,12 +68,14 @@ public class FilmService {
 
     public Collection<Film> getFilms() {
         Collection<Film> films = storage.getFilms();
-        return genre.loadGenresForFilm(films);
+        films = genre.loadGenresForFilm(films);
+        return director.updateDirectorOfAllFilms(films);
     }
 
     public Film getFilmById(int id) {
         Film film = storage.getFilmById(id);
-        return genre.loadGenresForFilm(List.of(film)).get(0);
+        film = genre.loadGenresForFilm(List.of(film)).get(0);
+        return director.updateDirectorOfFilms(film);
     }
 
     private void filmValidation(Film film) {

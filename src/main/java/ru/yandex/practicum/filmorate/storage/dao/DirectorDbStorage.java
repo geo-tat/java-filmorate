@@ -121,4 +121,13 @@ public class DirectorDbStorage implements DirectorStorage {
 
     }
 
+    public Collection<Film> updateDirectorOfAllFilms(Collection<Film> films) {
+        if (films != null && films.size() != 0) {
+            for (Film film : films) {
+                film.setDirectors(getDirectors(film.getId()));
+            }
+        }
+        return films;
+    }
+
 }

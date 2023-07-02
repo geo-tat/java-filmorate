@@ -68,7 +68,9 @@ public class FilmDbStorage implements FilmStorage {
                 "FROM film AS f " +
                 "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
                 "GROUP BY f.film_id";
+
         return jdbcTemplate.query(sql, mapper);
+
     }
 
     @Override

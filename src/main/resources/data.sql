@@ -1,6 +1,6 @@
 -- Delete table section(reuse) -------------------------------------------------
 
- /*DELETE FROM public.film_user_like;
+ DELETE FROM public.film_user_like;
  DELETE FROM public.film_genre;
  DELETE FROM public.user_friend;
 --
@@ -14,7 +14,7 @@
  ALTER TABLE public.users ALTER COLUMN user_id RESTART WITH 1;
 --
  DELETE FROM public.mpa;
- ALTER TABLE public.mpa ALTER COLUMN mpa_id RESTART WITH 1;*/
+ ALTER TABLE public.mpa ALTER COLUMN mpa_id RESTART WITH 1;
 
 
 --
