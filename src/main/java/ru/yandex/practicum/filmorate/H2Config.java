@@ -11,7 +11,7 @@ public class H2Config {
 
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server inMemoryH2DataBaseServer() throws SQLException {
-        return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9090");
+        return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9191");
     }
 
 }
