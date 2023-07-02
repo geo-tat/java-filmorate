@@ -73,6 +73,11 @@ public class FilmService {
         return genre.loadGenresForFilm(List.of(film)).get(0);
     }
 
+    public List<Film> getRecommendations(int id) {
+        List<Film> recommendedFilms = likeDbStorage.getRecommendations(id);
+        return genre.loadGenresForFilm(recommendedFilms);
+    }
+
     private void filmValidation(Film film) {
         if (film.getName().isEmpty()) {
             log.error("Название фильма не указано");

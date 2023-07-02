@@ -55,4 +55,9 @@ public class FilmController {
         return service.getTopFilms(count);
     }
 
+    // GET /users/{id}/recommendations
+    @GetMapping("users/{id}/recommendations")
+    public Collection<Film> getRecommendations(@PathVariable int id) {
+        return service.getRecommendations(id);
+    }
 }
