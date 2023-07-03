@@ -55,6 +55,12 @@ public class FilmController {
         return service.getTopFilms(count);
     }
 
+    @GetMapping("/films/director/{directorId}")
+    public Collection<Film> getFilmOfDirectorSortBy(@PathVariable int directorId, @RequestParam(defaultValue = "year") Optional<String> sortBy) {
+        String sortParam = sortBy.get();
+        return service.getFilmOfDirectorSortBy(directorId, sortParam);
+    }
+
     // GET /users/{id}/recommendations
     @GetMapping("users/{id}/recommendations")
     public Collection<Film> getRecommendations(@PathVariable int id) {
