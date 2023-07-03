@@ -41,7 +41,7 @@ public class LikeDbStorage implements LikeStorage {
                 "FROM film AS f " +
                 "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
                 "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
-                "GROUP BY f.name " +
+                "GROUP BY f.name, f.film_id " +
                 "ORDER BY COUNT (ful.user_id) DESC " +
                 "LIMIT ?";
         return jdbcTemplate.query(sql, mapper, count);

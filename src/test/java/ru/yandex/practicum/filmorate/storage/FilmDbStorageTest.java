@@ -98,4 +98,14 @@ public class FilmDbStorageTest {
         assertThat(films.get(0).getName()).isEqualTo("Iron Man");
         assertThat(films.get(1).getName()).isEqualTo("Spider Man");
     }
+    @Test
+    public void deleteFilmById() {
+        // Given
+
+        // When
+        controller.deleteFilmById(1);
+        controller.deleteFilmById(2);
+        // Then
+        assertThat(controller.getFilms()).isEqualTo(new ArrayList<>());
+    }
 }

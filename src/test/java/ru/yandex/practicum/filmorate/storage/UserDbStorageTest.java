@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserDbStorageTest {
     private final UserController controller;
     private final UserDbStorage storage;
@@ -85,5 +87,15 @@ public class UserDbStorageTest {
 
         assertThat(users.get(0).getEmail()).isEqualTo("andy@gmail.com");
         assertThat(users.get(1).getEmail()).isEqualTo("gabriel@gmail.com");
+    }
+    @Test
+    void deleteUserById() {
+        // Given
+
+        // When
+        controller.deleteUserById(1);
+        controller.deleteUserById(2);
+        // Then
+        assertThat(controller.getUsers()).isEmpty();
     }
 }
