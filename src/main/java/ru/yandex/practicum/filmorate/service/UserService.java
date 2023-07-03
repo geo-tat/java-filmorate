@@ -42,8 +42,9 @@ public class UserService {
         return storage.getUserById(id);
     }
 
-    public boolean deleteUser(int id) {
-        return storage.deleteUser(id);
+    public boolean deleteUserById(int id) {
+        User userToDelete = storage.getUserById(id);
+        return storage.deleteUserById(id);
     }
 
     public void addFriend(int userId, int friendId) {

@@ -44,7 +44,8 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User updateUser(User user) {
         String sql = "UPDATE users SET EMAIL = ?, LOGIN = ?, NAME = ?, BIRTHDAY = ? WHERE USER_ID = ?";
-        int result = jdbcTemplate.update(sql, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
+        int result = jdbcTemplate.update(sql, user.getEmail(), user.getLogin(),
+                user.getName(), user.getBirthday(), user.getId());
         if (result == 0) {
             log.info("Пользователя с таким ID не существует: {}", user.getId());
             throw new UserNotFoundException("Пользователя с таким ID не существует");
@@ -68,8 +69,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public boolean deleteUser(int id) {
-        String sql = "DELETE FROM users WHERE id = ?";
+    public boolean deleteUserById(int id) {
+        String sql = "DELETE FROM users WHERE user_id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
 
