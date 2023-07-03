@@ -46,8 +46,8 @@ public class FilmService {
         likeDbStorage.removeLike(filmID, userID);
     }
 
-    public List<Film> getTopFilms(int count) {
-        List<Film> films = new ArrayList<>(likeDbStorage.getTopFilms(count));
+    public List<Film> getTopFilms(int count, Optional<Integer> genreId, Optional<Integer> year) {
+        List<Film> films = new ArrayList<>(likeDbStorage.getTopFilms(count, genreId, year));
         return genre.loadGenresForFilm(films);
     }
 

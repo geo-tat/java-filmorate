@@ -743,6 +743,79 @@ public class EndpointsTests {
                 HttpStatus.OK,
                 HttpMethod.GET
         );
+
+        //add-most-popular
+        this.template("Film get Popular with genre id=1",
+                "films/popular?genreId=1",
+                "",
+                "[{\"id\":2,\"name\":\"New film\",\"description\":\"New film about friends\",\"releaseDate\":\"1999-04-30\",\"duration\":120,\"genres\":[{\"id\":1,\"name\":\"Комедия\"},{\"id\":2,\"name\":\"Драма\"}],\"mpa\":{\"id\":3,\"name\":\"PG-13\"},\"directors\":[]}]",
+                MediaType.ALL,
+                MediaType.APPLICATION_JSON,
+                HttpStatus.OK,
+                HttpMethod.GET
+        );
+
+        this.template("Film get Popular with genre id=2",
+                "films/popular?genreId=2",
+                "",
+                "[{\"id\":2,\"name\":\"New film\",\"description\":\"New film about friends\",\"releaseDate\":\"1999-04-30\",\"duration\":120,\"genres\":[{\"id\":1,\"name\":\"Комедия\"},{\"id\":2,\"name\":\"Драма\"}],\"mpa\":{\"id\":3,\"name\":\"PG-13\"},\"directors\":[]}]",
+                MediaType.ALL,
+                MediaType.APPLICATION_JSON,
+                HttpStatus.OK,
+                HttpMethod.GET
+        );
+
+        this.template("Film get Popular with genre id=3 not exist",
+                "films/popular?genreId=3",
+                "",
+                "[]",
+                MediaType.ALL,
+                MediaType.APPLICATION_JSON,
+                HttpStatus.OK,
+                HttpMethod.GET
+        );
+
+        this.template("Film get Popular with year=1999",
+                "films/popular?year=1999",
+                "",
+                "[{\"id\":2,\"name\":\"New film\",\"description\":\"New film about friends\",\"releaseDate\":\"1999-04-30\",\"duration\":120,\"genres\":[{\"id\":1,\"name\":\"Комедия\"},{\"id\":2,\"name\":\"Драма\"}],\"mpa\":{\"id\":3,\"name\":\"PG-13\"},\"directors\":[]}]",
+                MediaType.ALL,
+                MediaType.APPLICATION_JSON,
+                HttpStatus.OK,
+                HttpMethod.GET
+        );
+
+        this.template("Film get Popular with year=2000 not exits",
+                "films/popular?year=2000",
+                "",
+                "[]",
+                MediaType.ALL,
+                MediaType.APPLICATION_JSON,
+                HttpStatus.OK,
+                HttpMethod.GET
+        );
+
+        this.template("Film get Popular with genre id=1 and year=1999",
+                "films/popular?year=1999&genreId=1",
+                "",
+                "[{\"id\":2,\"name\":\"New film\",\"description\":\"New film about friends\",\"releaseDate\":\"1999-04-30\",\"duration\":120,\"genres\":[{\"id\":1,\"name\":\"Комедия\"},{\"id\":2,\"name\":\"Драма\"}],\"mpa\":{\"id\":3,\"name\":\"PG-13\"},\"directors\":[]}]",
+                MediaType.ALL,
+                MediaType.APPLICATION_JSON,
+                HttpStatus.OK,
+                HttpMethod.GET
+        );
+
+        this.template("Film get Popular with genre id=2 and year=2000 not exits",
+                "films/popular?year=2000&genreId=2",
+                "",
+                "[]",
+                MediaType.ALL,
+                MediaType.APPLICATION_JSON,
+                HttpStatus.OK,
+                HttpMethod.GET
+        );
+
+
         //----DIRECTOR-----
         this.template("Get all directors before create",
                 "directors",
@@ -1018,5 +1091,6 @@ public class EndpointsTests {
                 HttpStatus.NOT_FOUND,
                 HttpMethod.GET
         );
+
     }
 }
