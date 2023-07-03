@@ -67,4 +67,10 @@ public class FilmController {
         return service.getRecommendations(id);
     }
 
+    // Удаляем фильм
+    @DeleteMapping("films/{filmId}")
+    public boolean deleteFilmById(@PathVariable int filmId) {
+       return service.deleteFilmById(filmId);
+    }
+
 }

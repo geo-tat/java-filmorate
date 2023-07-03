@@ -117,5 +117,4 @@ public class FilmControllerTest {
         // Then
         assertEquals("Фильм c Id: 33 не найден.", exception.getMessage());
     }
-
 }

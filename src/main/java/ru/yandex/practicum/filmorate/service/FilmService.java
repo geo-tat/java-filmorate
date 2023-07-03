@@ -83,6 +83,11 @@ public class FilmService {
         return genre.loadGenresForFilm(recommendedFilms);
     }
 
+    public boolean deleteFilmById(int filmId) {
+        Film filmToDelete = storage.getFilmById(filmId);
+       return storage.deleteFilmById(filmId);
+    }
+
     private void filmValidation(Film film) {
         if (film.getName().isEmpty()) {
             log.error("Название фильма не указано");
