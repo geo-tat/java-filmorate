@@ -26,7 +26,7 @@ public class EndpointsTests {
     void template(String description, String endpoint, String RequestBody, String ResponseBody, MediaType RequestType, MediaType ResponseType, HttpStatus StatusResponse, HttpMethod method) throws ValidationException {
         String bodyJsonRequest = RequestBody;
         // print to IO
-        System.out.println("------------"+description+"--------------");
+        System.out.println("------------" + description + "--------------");
         System.out.println("---TEST ADDRESS---");
         System.out.println("http://localhost:" + port + "/" + endpoint);
         System.out.println("---  REQUEST AND RESPONSE---");
