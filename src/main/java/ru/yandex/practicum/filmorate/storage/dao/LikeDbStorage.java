@@ -58,7 +58,7 @@ public class LikeDbStorage implements LikeStorage {
                     "FROM film AS f " +
                     "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
                     "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
-                    "GROUP BY f.name " +
+                    "GROUP BY f.name, f.film_id " +
                     "ORDER BY COUNT (ful.user_id) DESC " +
                     "LIMIT ?";
             return jdbcTemplate.query(sql, mapper, count);
@@ -71,7 +71,7 @@ public class LikeDbStorage implements LikeStorage {
                     "JOIN film_genre AS fg ON fg.film_id = f.film_id " +
                     "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
                     "WHERE fg.genre_id = ? " +
-                    "GROUP BY f.name " +
+                    "GROUP BY f.name, f.film_id " +
                     "ORDER BY COUNT (ful.user_id) DESC " +
                     "LIMIT ?";
             return jdbcTemplate.query(sql, mapper, genreParam, count);
@@ -83,7 +83,7 @@ public class LikeDbStorage implements LikeStorage {
                     "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
                     "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
                     "WHERE YEAR(f.release_date) = ? " +
-                    "GROUP BY f.name " +
+                    "GROUP BY f.name, f.film_id " +
                     "ORDER BY COUNT (ful.user_id) DESC " +
                     "LIMIT ?";
             return jdbcTemplate.query(sql, mapper, yearParam, count);
@@ -96,7 +96,7 @@ public class LikeDbStorage implements LikeStorage {
                     "JOIN film_genre AS fg ON fg.film_id = f.film_id " +
                     "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
                     "WHERE fg.genre_id = ? AND YEAR(f.release_date) = ? " +
-                    "GROUP BY f.name " +
+                    "GROUP BY f.name, f.film_id " +
                     "ORDER BY COUNT (ful.user_id) DESC " +
                     "LIMIT ?";
             return jdbcTemplate.query(sql, mapper, genreParam, yearParam, count);
