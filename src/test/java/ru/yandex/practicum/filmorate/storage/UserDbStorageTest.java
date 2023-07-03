@@ -88,6 +88,7 @@ public class UserDbStorageTest {
         assertThat(users.get(0).getEmail()).isEqualTo("andy@gmail.com");
         assertThat(users.get(1).getEmail()).isEqualTo("gabriel@gmail.com");
     }
+
     @Test
     void deleteUserById() {
         // Given
