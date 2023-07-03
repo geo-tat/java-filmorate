@@ -78,6 +78,11 @@ public class FilmService {
         return director.updateDirectorOfFilms(film);
     }
 
+    public List<Film> getRecommendations(int id) {
+        List<Film> recommendedFilms = likeDbStorage.getRecommendations(id);
+        return genre.loadGenresForFilm(recommendedFilms);
+    }
+
     private void filmValidation(Film film) {
         if (film.getName().isEmpty()) {
             log.error("Название фильма не указано");
