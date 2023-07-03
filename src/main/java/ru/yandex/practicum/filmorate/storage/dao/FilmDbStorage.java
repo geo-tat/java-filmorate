@@ -113,7 +113,13 @@ public class FilmDbStorage implements FilmStorage {
         }
 
         return jdbcTemplate.query(sql, mapper, directorId);
+    }
 
+
+    public boolean deleteFilmById(int filmId) {
+        String sql = "DELETE FROM film WHERE film_id = ?";
+        jdbcTemplate.update(sql, filmId);
+        return jdbcTemplate.update(sql, filmId) > 0;
     }
 
 

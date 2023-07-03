@@ -66,4 +66,11 @@ public class FilmController {
     public Collection<Film> getRecommendations(@PathVariable int id) {
         return service.getRecommendations(id);
     }
+
+    // Удаляем фильм
+    @DeleteMapping("films/{filmId}")
+    public boolean deleteFilmById(@PathVariable int filmId) {
+       return service.deleteFilmById(filmId);
+    }
+
 }
