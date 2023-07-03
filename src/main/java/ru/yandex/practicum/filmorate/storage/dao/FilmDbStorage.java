@@ -108,7 +108,7 @@ public class FilmDbStorage implements FilmStorage {
                     "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
                     "WHERE fd.director_id  = ? " +
                     "GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
-                    "ORDER BY rate" ;
+                    "ORDER BY rate";
 
         }
 
