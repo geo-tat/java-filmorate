@@ -41,9 +41,4 @@ public class DirectorController {
         service.deleteDirector(id);
     }
 
-    //добавить в фильмы
-    //@GetMapping("/films/director/{directorId}?sortBy=[year,likes]")
-    //POST /films с учетом директора
-
-
 }

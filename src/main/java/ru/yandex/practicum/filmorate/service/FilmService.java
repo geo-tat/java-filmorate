@@ -54,7 +54,7 @@ public class FilmService {
     public Film addFilm(Film film) {
         filmValidation(film);
         Film result = storage.addFilm(film);
-        result =  genre.updateGenre(result);
+        result = genre.updateGenre(result);
         return director.updateDirectorOfFilms(result);
     }
 
@@ -62,7 +62,6 @@ public class FilmService {
         filmValidation(film);
         Film updatedFilm = storage.updateFilm(film);
         updatedFilm = genre.updateGenre(updatedFilm);
-        updatedFilm = genre.loadGenresForFilm(List.of(film)).get(0);
         return director.updateDirectorOfFilms(updatedFilm);
     }
 
@@ -75,7 +74,8 @@ public class FilmService {
     public Film getFilmById(int id) {
         Film film = storage.getFilmById(id);
         film = genre.loadGenresForFilm(List.of(film)).get(0);
-        return director.updateDirectorOfFilms(film);
+        film.setDirectors(director.getDirectors(film.getId()));
+        return film;
     }
 
     public List<Film> getRecommendations(int id) {
@@ -101,4 +101,12 @@ public class FilmService {
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         }
     }
+
+    public Collection<Film> getFilmOfDirectorSortBy(int directorId, String sortParam) {
+        director.getDirectorById(directorId);
+        Collection<Film> films = storage.getFilmOfDirectorSortBy(directorId, sortParam);
+        films = genre.loadGenresForFilm(films);
+        return director.updateDirectorOfAllFilms(films);
+    }
+
 }

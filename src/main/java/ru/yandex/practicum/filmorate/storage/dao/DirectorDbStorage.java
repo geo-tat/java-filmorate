@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
+import ru.yandex.practicum.filmorate.exception.DirectorNotFoundException;
 import ru.yandex.practicum.filmorate.mapper.DirectorMapper;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -39,7 +39,7 @@ public class DirectorDbStorage implements DirectorStorage {
         return jdbcTemplate.query(sql, mapper, id)
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new GenreNotFoundException("ID не существует."));
+                .orElseThrow(() -> new DirectorNotFoundException("ID не существует."));
     }
 
     @Override
@@ -71,7 +71,10 @@ public class DirectorDbStorage implements DirectorStorage {
     }
 
     @Override
-    public void deleteDirector(int id) {
+    public void deleteDirector(int director_id) {
+
+        String sql = "DELETE FROM director WHERE director_id = ? ";
+        jdbcTemplate.update(sql, director_id);
 
     }
 
@@ -108,7 +111,7 @@ public class DirectorDbStorage implements DirectorStorage {
 
     }
 
-    List<Director> getDirectors(int film_id) {
+    public List<Director> getDirectors(int film_id) {
 
         String sql = "SELECT d.director_id , d.name  \n" +
                 "FROM public.director AS d\n" +

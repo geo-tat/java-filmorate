@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
+import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,7 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     public Film updateGenre(Film film) {
+
         int id = film.getId();
         String sql = "DELETE FROM film_genre WHERE film_id = ?";
         jdbcTemplate.update(sql, id);
@@ -48,18 +50,27 @@ public class GenreDbStorage implements GenreStorage {
             film.setGenres(new ArrayList<>());
             return film;
         }
-        List<Genre> genres = film.getGenres();
-        Map<Integer, Genre> genreMap = new HashMap<>();
+
+        String sqlQuery = "MERGE INTO film_genre (film_id, genre_id) values (?, ?)";
+
+        List<Genre> genres = (List<Genre>) film.getGenres();
+
         for (Genre genre : genres) {
-            genreMap.put(genre.getId(), genre);
+
+            jdbcTemplate.update(
+                    connection -> {
+                        PreparedStatement stmt = connection.prepareStatement(sqlQuery);
+                        stmt.setInt(1, id);
+                        stmt.setInt(2, genre.getId());
+                        return stmt;
+                    }
+            );
         }
-        List<Genre> genresNew = new ArrayList<>(genreMap.values());
-        for (Genre genre : genresNew) {
-            String sqlInsert = "INSERT INTO film_genre (film_id, genre_id) VALUES (?,?) ";
-            jdbcTemplate.update(sqlInsert, id, genre.getId());
-        }
-        film.setGenres(genresNew);
+
+        film.setGenres(getGenres(id));
+
         return film;
+
     }
 
     public List<Film> loadGenresForFilm(Collection<Film> films) {
@@ -75,5 +86,17 @@ public class GenreDbStorage implements GenreStorage {
                     .build());
         }, filmMap.keySet().toArray());
         return new ArrayList<>(films);
+    }
+
+    List<Genre> getGenres(int film_id) {
+
+        String sql = "SELECT g.genre_id , g.name  \n" +
+                "FROM genre AS g\n" +
+                "INNER JOIN\n" +
+                "film_genre AS fgs ON fgs.genre_id = g.genre_id  AND fgs.film_id = ?";
+
+        List<Genre> genres = jdbcTemplate.query(sql, (rs, rowNum) -> mapper.mapRow(rs, rowNum), film_id);
+
+        return genres;
     }
 }
