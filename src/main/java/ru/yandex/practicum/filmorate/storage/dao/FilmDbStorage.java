@@ -68,7 +68,9 @@ public class FilmDbStorage implements FilmStorage {
                 "FROM film AS f " +
                 "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
                 "GROUP BY f.film_id";
+
         return jdbcTemplate.query(sql, mapper);
+
     }
 
     @Override
@@ -82,6 +84,41 @@ public class FilmDbStorage implements FilmStorage {
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new FilmNotFoundException("Фильм c Id: " + id + " не найден."));
+    }
+
+    @Override
+    public Collection<Film> getFilmOfDirectorSortBy(int directorId, String sortParam) {
+
+        String sql = null;
+
+        if (sortParam.equals("year")) {
+            sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
+                    "FROM film AS f " +
+                    "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                    "JOIN film_director AS fd ON fd.film_id  = f.film_id " +
+                    "WHERE fd.director_id  = ? " +
+                    "ORDER BY f.release_date ";
+
+        } else if (sortParam.equals("likes")) {
+            sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name, " +
+                    "COUNT(ful.FILM_ID) AS rate " +
+                    "FROM film AS f " +
+                    "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                    "JOIN film_director AS fd ON fd.film_id  = f.film_id " +
+                    "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                    "WHERE fd.director_id  = ? " +
+                    "GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
+                    "ORDER BY rate";
+
+        }
+
+        return jdbcTemplate.query(sql, mapper, directorId);
+    }
+
+    public boolean deleteFilmById(int filmId) {
+        String sql = "DELETE FROM film WHERE film_id = ?";
+        jdbcTemplate.update(sql, filmId);
+        return jdbcTemplate.update(sql, filmId) > 0;
     }
 
     public List<Film> search(String query, List<String> by) {

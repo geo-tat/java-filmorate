@@ -13,4 +13,9 @@ public interface FilmStorage {
     Collection<Film> getFilms();
 
     Film getFilmById(int id);
+
+    Collection<Film> getFilmOfDirectorSortBy(int directorId, String sortParam);
+
+    boolean deleteFilmById(int filmId);
+
 }

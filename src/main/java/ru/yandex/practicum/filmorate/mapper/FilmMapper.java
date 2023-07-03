@@ -34,6 +34,7 @@ public class FilmMapper implements RowMapper<Film> {
                         .name(rs.getString("mpa.name"))
                         .build())
                 .genres(new ArrayList<>())
+                .directors(new ArrayList<>())
                 .build();
     }
 }
