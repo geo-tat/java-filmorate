@@ -87,8 +87,8 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public boolean deleteFilmById(int filmId) {
         String sql = "DELETE FROM film WHERE film_id = ?";
-                jdbcTemplate.update(sql,filmId);
-        return jdbcTemplate.update(sql,filmId) > 0;
+        jdbcTemplate.update(sql, filmId);
+        return jdbcTemplate.update(sql, filmId) > 0;
     }
 
 
