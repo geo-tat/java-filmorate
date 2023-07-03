@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.LikeStorage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
@@ -36,15 +37,73 @@ public class LikeDbStorage implements LikeStorage {
     }
 
     @Override
-    public Collection<Film> getTopFilms(int count) {
-        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
-                "FROM film AS f " +
-                "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
-                "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
-                "GROUP BY f.name " +
-                "ORDER BY COUNT (ful.user_id) DESC " +
-                "LIMIT ?";
-        return jdbcTemplate.query(sql, mapper, count);
+    public Collection<Film> getTopFilms(int count, Optional<Integer> genreId, Optional<Integer> year) {
+
+        int genreParam;
+        if (genreId.equals(Optional.empty())) {
+            genreParam = 0;
+        } else {
+            genreParam = genreId.get();
+        }
+
+        int yearParam;
+        if (year.equals(Optional.empty())) {
+            yearParam = 0;
+        } else {
+            yearParam = year.get();
+        }
+
+        if (genreParam == 0 && yearParam == 0) {
+            String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
+                    "FROM film AS f " +
+                    "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                    "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                    "GROUP BY f.name " +
+                    "ORDER BY COUNT (ful.user_id) DESC " +
+                    "LIMIT ?";
+            return jdbcTemplate.query(sql, mapper, count);
+        }
+
+        if (genreParam != 0 && yearParam == 0) {
+            String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
+                    "FROM film AS f " +
+                    "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                    "JOIN film_genre AS fg ON fg.film_id = f.film_id " +
+                    "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                    "WHERE fg.genre_id = ? " +
+                    "GROUP BY f.name " +
+                    "ORDER BY COUNT (ful.user_id) DESC " +
+                    "LIMIT ?";
+            return jdbcTemplate.query(sql, mapper, genreParam, count);
+        }
+
+        if (genreParam == 0 && yearParam != 0) {
+            String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, m.mpa_id, m.name " +
+                    "FROM film AS f " +
+                    "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                    "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                    "WHERE YEAR(f.release_date) = ? " +
+                    "GROUP BY f.name " +
+                    "ORDER BY COUNT (ful.user_id) DESC " +
+                    "LIMIT ?";
+            return jdbcTemplate.query(sql, mapper, yearParam, count);
+        }
+
+        if (genreParam != 0 && yearParam != 0) {
+            String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration,m.mpa_id, m.name " +
+                    "FROM film AS f " +
+                    "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                    "JOIN film_genre AS fg ON fg.film_id = f.film_id " +
+                    "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                    "WHERE fg.genre_id = ? AND YEAR(f.release_date) = ? " +
+                    "GROUP BY f.name " +
+                    "ORDER BY COUNT (ful.user_id) DESC " +
+                    "LIMIT ?";
+            return jdbcTemplate.query(sql, mapper, genreParam, yearParam, count);
+        }
+
+        return null;
+
     }
 
     public List<Film> getRecommendations(int userId) {
