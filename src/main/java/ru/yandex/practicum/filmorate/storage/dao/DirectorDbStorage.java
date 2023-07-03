@@ -26,6 +26,7 @@ public class DirectorDbStorage implements DirectorStorage {
 
     private final JdbcTemplate jdbcTemplate;
     private final DirectorMapper mapper;
+
     @Override
     public Collection<Director> getDirectors() {
         String sql = "SELECT * FROM director ORDER BY director_id ASC";
@@ -71,10 +72,10 @@ public class DirectorDbStorage implements DirectorStorage {
     }
 
     @Override
-    public void deleteDirector(int director_id) {
+    public void deleteDirector(int directorId) {
 
         String sql = "DELETE FROM director WHERE director_id = ? ";
-        jdbcTemplate.update(sql, director_id);
+        jdbcTemplate.update(sql, directorId);
 
     }
 
@@ -111,14 +112,14 @@ public class DirectorDbStorage implements DirectorStorage {
 
     }
 
-    public List<Director> getDirectors(int film_id) {
+    public List<Director> getDirectors(int filmId) {
 
         String sql = "SELECT d.director_id , d.name  \n" +
                 "FROM public.director AS d\n" +
                 "INNER JOIN\n" +
                 "public.film_director AS fd ON fd.director_id = d.director_id  AND fd.film_id = ?";
 
-        List<Director> directors = jdbcTemplate.query(sql, (rs, rowNum) -> mapper.mapRow(rs, rowNum), film_id);
+        List<Director> directors = jdbcTemplate.query(sql, (rs, rowNum) -> mapper.mapRow(rs, rowNum), filmId);
 
         return directors;
 
