@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
@@ -121,7 +122,64 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.update(sql, filmId) > 0;
     }
 
+    @Override
     public List<Film> search(String query, List<String> by) {
-        return null;
+        String sql;
+
+        if (by.size() == 2) {
+            if (by.contains("title") && by.contains("director")) {
+
+                sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
+                        "COUNT(ful.film_id) AS rate " +
+                        "FROM film AS f " +
+                        "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                        "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                        "LEFT JOIN director d ON d.director_id = fd.director_id " +
+                        "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                        "WHERE f.film_id IN (SELECT film_id " +
+                        "                   FROM film_director " +
+                        "                   WHERE director_id IN (SELECT director_id " +
+                        "                                       FROM director " +
+                        "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
+                        "OR LOWER(f.name) LIKE LOWER(?) " +
+                        "GROUP BY f.film_id " +
+                        "ORDER BY rate DESC;";
+
+                return jdbcTemplate.query(sql, mapper, "%" + query + "%", "%" + query + "%");
+            } else {
+                throw new IncorrectParameterException("Указаны неверные параметры поиска");
+            }
+
+        } else if (by.size() == 1) {
+            if (by.get(0).equals("title")) {
+                sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, " +
+                        "COUNT(ful.film_id) AS rate " +
+                        "FROM film AS f " +
+                        "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                        "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                        "WHERE LOWER(f.name) LIKE LOWER(?) " +
+                        "GROUP BY f.film_id " +
+                        "ORDER BY rate DESC;";
+                return jdbcTemplate.query(sql, mapper, "%" + query + "%");
+
+            } else if (by.get(0).equals("director")) {
+                sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
+                        "COUNT(ful.film_id) AS rate " +
+                        "FROM film AS f " +
+                        "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                        "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                        "LEFT JOIN director d ON d.director_id = fd.director_id " +
+                        "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                        "WHERE f.film_id IN (SELECT film_id " +
+                        "                   FROM film_director " +
+                        "                   WHERE director_id IN (SELECT director_id " +
+                        "                                       FROM director " +
+                        "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
+                        "GROUP BY f.film_id " +
+                        "ORDER BY rate DESC;";
+                return jdbcTemplate.query(sql, mapper, "%" + query + "%");
+            }
+        }
+        throw new IncorrectParameterException("Отсутствуют параметры поиска");
     }
 }

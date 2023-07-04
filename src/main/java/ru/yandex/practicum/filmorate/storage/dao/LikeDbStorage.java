@@ -106,6 +106,7 @@ public class LikeDbStorage implements LikeStorage {
 
     }
 
+    @Override
     public List<Film> getRecommendations(int userId) {
         //Найти все фильмы, которым поставил лайк пользователь с максимальным количеством пересечений по лайкам.
         String sqlOtherUserFilms = "SELECT f.film_id, " +

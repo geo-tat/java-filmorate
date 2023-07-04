@@ -89,7 +89,8 @@ public class FilmService {
     }
 
     public List<Film> search (String query, List<String> by) {
-        return storage.search(query, by);
+        List<Film> films = storage.search(query, by);
+        return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(films)));
     }
 
     private void filmValidation(Film film) {
