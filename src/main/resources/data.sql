@@ -1,3 +1,4 @@
+
 MERGE INTO mpa (mpa_id, name)
     VALUES  (1,'G'),
             (2,'PG'),

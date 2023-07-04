@@ -51,7 +51,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public boolean deleteUser(int id) {
+    public boolean deleteUserById(int id) {
         if (users.containsKey(id)) {
             users.remove(id);
             return true;

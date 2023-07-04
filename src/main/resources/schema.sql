@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS film_user_like CASCADE;
+DROP TABLE IF EXISTS mpa CASCADE;
+DROP TABLE IF EXISTS user_friend CASCADE;
+DROP TABLE IF EXISTS film CASCADE;
+DROP TABLE IF EXISTS genre CASCADE;
+DROP TABLE IF EXISTS film_genre CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS director CASCADE;
+DROP TABLE IF EXISTS film_director CASCADE;
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -38,7 +47,7 @@ CREATE TABLE IF NOT EXISTS film_genre
     genre_id int,
     CONSTRAINT pk_film_genre PRIMARY KEY (film_id, genre_id),
     CONSTRAINT genre_fk
-    FOREIGN KEY (film_id) REFERENCES film(film_id),
+    FOREIGN KEY (film_id) REFERENCES film(film_id) ON DELETE CASCADE,
     CONSTRAINT genre_fk_two
     FOREIGN KEY (genre_id) REFERENCES genre(genre_id)
     );
@@ -47,8 +56,8 @@ CREATE TABLE IF NOT EXISTS user_friend
 (
     user_id      int,
     friend_id    int,
-    FOREIGN KEY (user_id) REFERENCES users (user_id),
-    FOREIGN KEY (friend_id) REFERENCES users (user_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE,
     UNIQUE (user_id, friend_id)
     );
 
@@ -57,6 +66,29 @@ CREATE TABLE IF NOT EXISTS film_user_like
     film_id int,
     user_id int,
     CONSTRAINT pk_ful PRIMARY KEY (film_id, user_id),
-    FOREIGN KEY (film_id) REFERENCES film (film_id),
-    FOREIGN KEY (user_id) REFERENCES users (user_id)
+    FOREIGN KEY (film_id) REFERENCES film (film_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
     );
+
+
+CREATE TABLE IF NOT EXISTS director
+(
+    director_id int PRIMARY KEY AUTO_INCREMENT,
+    name     varchar UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS film_director
+(
+    film_id  int,
+    director_id int,
+    CONSTRAINT pk_film_director PRIMARY KEY (film_id, director_id),
+    CONSTRAINT director_fk
+    FOREIGN KEY (film_id) REFERENCES film(film_id)
+    ON DELETE CASCADE ,
+    CONSTRAINT director_fk_two
+    FOREIGN KEY (director_id) REFERENCES director(director_id)
+    ON DELETE CASCADE
+    );
+
+
+
