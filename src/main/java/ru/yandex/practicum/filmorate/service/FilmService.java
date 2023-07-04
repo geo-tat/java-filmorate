@@ -88,7 +88,7 @@ public class FilmService {
        return storage.deleteFilmById(filmId);
     }
 
-    public List<Film> search (String query, List<String> by) {
+    public List<Film> search(String query, List<String> by) {
         List<Film> films = storage.search(query, by);
         return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(films)));
     }
