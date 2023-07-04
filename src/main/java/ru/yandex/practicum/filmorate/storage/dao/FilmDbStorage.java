@@ -9,14 +9,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
-import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
@@ -124,5 +123,16 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.update(sql, filmId) > 0;
     }
 
-
+    @Override
+    public Collection<Film> getCommonFilms(int userId, int friendId) {
+        String sql = "SELECT * " +
+                "FROM film AS f " +
+                "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "JOIN film_user_like AS A ON A.film_id = f.film_id AND A.user_id = ? " +
+                "JOIN film_user_like AS B ON B.film_id = f.film_id AND B.user_id = ? " +
+                "JOIN (SELECT film_id, COUNT(user_id) AS rate " +
+                "FROM film_user_like GROUP BY film_id) AS l ON (l.film_id = f.film_id) " +
+                "ORDER BY l.rate DESC;";
+        return jdbcTemplate.query(sql, mapper, userId, friendId);
+    }
 }

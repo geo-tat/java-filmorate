@@ -2,12 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class FilmController {
@@ -70,6 +71,11 @@ public class FilmController {
     // Удаляем фильм
     @DeleteMapping("films/{filmId}")
     public boolean deleteFilmById(@PathVariable int filmId) {
-       return service.deleteFilmById(filmId);
+        return service.deleteFilmById(filmId);
+    }
+
+    @GetMapping("/films/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        return service.getCommonFilms(userId, friendId);
     }
 }

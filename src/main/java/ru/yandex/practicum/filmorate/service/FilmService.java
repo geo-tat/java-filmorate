@@ -9,7 +9,10 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dao.*;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -85,7 +88,7 @@ public class FilmService {
 
     public boolean deleteFilmById(int filmId) {
         Film filmToDelete = storage.getFilmById(filmId);
-       return storage.deleteFilmById(filmId);
+        return storage.deleteFilmById(filmId);
     }
 
     private void filmValidation(Film film) {
@@ -112,6 +115,11 @@ public class FilmService {
         Collection<Film> films = storage.getFilmOfDirectorSortBy(directorId, sortParam);
         films = genre.loadGenresForFilm(films);
         return director.updateDirectorOfAllFilms(films);
+    }
+
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        List<Film> films = new ArrayList<>(storage.getCommonFilms(userId, friendId));
+        return genre.loadGenresForFilm(films);
     }
 
 }

@@ -18,4 +18,6 @@ public interface FilmStorage {
 
     boolean deleteFilmById(int filmId);
 
+    Collection<Film> getCommonFilms(int userId, int friendId);
+
 }
