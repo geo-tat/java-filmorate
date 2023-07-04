@@ -72,4 +72,9 @@ public class FilmController {
     public boolean deleteFilmById(@PathVariable int filmId) {
        return service.deleteFilmById(filmId);
     }
+
+    @GetMapping("/films/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        return service.getCommonFilms(userId, friendId);
+    }
 }

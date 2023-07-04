@@ -114,4 +114,9 @@ public class FilmService {
         return director.updateDirectorOfAllFilms(films);
     }
 
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        List<Film> films = new ArrayList<>(storage.getCommonFilms(userId, friendId));
+        return genre.loadGenresForFilm(films);
+    }
+
 }
