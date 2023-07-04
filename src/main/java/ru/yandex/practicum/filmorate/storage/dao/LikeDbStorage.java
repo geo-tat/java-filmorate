@@ -109,13 +109,8 @@ public class LikeDbStorage implements LikeStorage {
     @Override
     public List<Film> getRecommendations(int userId) {
         //Найти все фильмы, которым поставил лайк пользователь с максимальным количеством пересечений по лайкам.
-        String sqlOtherUserFilms = "SELECT f.film_id, " +
-                "f.name, " +
-                "f.description, " +
-                "f.release_date, " +
-                "f.duration, " +
-                "m.mpa_id, " +
-                "m.name " +
+        String sqlOtherUserFilms = "SELECT f.film_id, f.name, f.description, f.release_date, " +
+                "f.duration, m.mpa_id, m.name " +
                 "FROM film AS f " +
                 "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
                 "WHERE f.film_id IN (SELECT film_id " +
@@ -130,13 +125,8 @@ public class LikeDbStorage implements LikeStorage {
         List<Film> filmLikedByOtherUser = jdbcTemplate.query(sqlOtherUserFilms, mapper, userId);
 
         //найти все лайки текущего пользователя
-        String sqlCurrentUserFilms = "SELECT ful.film_id, " +
-                "f.name, " +
-                "f.description, " +
-                "f.release_date, " +
-                "f.duration, " +
-                "m.mpa_id, " +
-                "m.name " +
+        String sqlCurrentUserFilms = "SELECT ful.film_id, f.name, f.description, " +
+                "f.release_date, f.duration, m.mpa_id, m.name " +
                 "FROM film_user_like AS ful " +
                 "JOIN film AS f ON f.film_id = ful.film_id " +
                 "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +

@@ -80,7 +80,7 @@ public class FilmService {
 
     public List<Film> getRecommendations(int id) {
         List<Film> recommendedFilms = likeDbStorage.getRecommendations(id);
-        return genre.loadGenresForFilm(recommendedFilms);
+        return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(recommendedFilms)));
     }
 
     public boolean deleteFilmById(int filmId) {

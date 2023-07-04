@@ -124,62 +124,75 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> search(String query, List<String> by) {
-        String sql;
 
         if (by.size() == 2) {
             if (by.contains("title") && by.contains("director")) {
-
-                sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
-                        "COUNT(ful.film_id) AS rate " +
-                        "FROM film AS f " +
-                        "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
-                        "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
-                        "LEFT JOIN director d ON d.director_id = fd.director_id " +
-                        "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
-                        "WHERE f.film_id IN (SELECT film_id " +
-                        "                   FROM film_director " +
-                        "                   WHERE director_id IN (SELECT director_id " +
-                        "                                       FROM director " +
-                        "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
-                        "OR LOWER(f.name) LIKE LOWER(?) " +
-                        "GROUP BY f.film_id " +
-                        "ORDER BY rate DESC;";
-
-                return jdbcTemplate.query(sql, mapper, "%" + query + "%", "%" + query + "%");
+                return searchByTitleAndDirector(query);
             } else {
                 throw new IncorrectParameterException("Указаны неверные параметры поиска");
             }
-
         } else if (by.size() == 1) {
             if (by.get(0).equals("title")) {
-                sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, " +
-                        "COUNT(ful.film_id) AS rate " +
-                        "FROM film AS f " +
-                        "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
-                        "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
-                        "WHERE LOWER(f.name) LIKE LOWER(?) " +
-                        "GROUP BY f.film_id " +
-                        "ORDER BY rate DESC;";
-                return jdbcTemplate.query(sql, mapper, "%" + query + "%");
-
+                return searchByTitle(query);
             } else if (by.get(0).equals("director")) {
-                sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
-                        "COUNT(ful.film_id) AS rate " +
-                        "FROM film AS f " +
-                        "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
-                        "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
-                        "LEFT JOIN director d ON d.director_id = fd.director_id " +
-                        "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
-                        "WHERE f.film_id IN (SELECT film_id " +
-                        "                   FROM film_director " +
-                        "                   WHERE director_id IN (SELECT director_id " +
-                        "                                       FROM director " +
-                        "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
-                        "GROUP BY f.film_id " +
-                        "ORDER BY rate DESC;";
-                return jdbcTemplate.query(sql, mapper, "%" + query + "%");
+                return searchByDirector(query);
             }
         }
         throw new IncorrectParameterException("Отсутствуют параметры поиска");
+    }
+
+    private List<Film> searchByTitleAndDirector(String query) {
+
+        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
+                "COUNT(ful.film_id) AS rate " +
+                "FROM film AS f " +
+                "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN director d ON d.director_id = fd.director_id " +
+                "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                "WHERE f.film_id IN (SELECT film_id " +
+                "                   FROM film_director " +
+                "                   WHERE director_id IN (SELECT director_id " +
+                "                                       FROM director " +
+                "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
+                "OR LOWER(f.name) LIKE LOWER(?) " +
+                "GROUP BY f.film_id " +
+                "ORDER BY rate DESC;";
+
+        return jdbcTemplate.query(sql, mapper, "%" + query + "%", "%" + query + "%");
+    }
+
+    private List<Film> searchByTitle(String query) {
+
+        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, " +
+                "COUNT(ful.film_id) AS rate " +
+                "FROM film AS f " +
+                "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                "WHERE LOWER(f.name) LIKE LOWER(?) " +
+                "GROUP BY f.film_id " +
+                "ORDER BY rate DESC;";
+
+        return jdbcTemplate.query(sql, mapper, "%" + query + "%");
+    }
+
+    private List<Film> searchByDirector(String query) {
+
+        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
+                "COUNT(ful.film_id) AS rate " +
+                "FROM film AS f " +
+                "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN director d ON d.director_id = fd.director_id " +
+                "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                "WHERE f.film_id IN (SELECT film_id " +
+                "                   FROM film_director " +
+                "                   WHERE director_id IN (SELECT director_id " +
+                "                                       FROM director " +
+                "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
+                "GROUP BY f.film_id " +
+                "ORDER BY rate DESC;";
+
+        return jdbcTemplate.query(sql, mapper, "%" + query + "%");
     }
 }
