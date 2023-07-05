@@ -744,6 +744,182 @@ public class EndpointsTests {
                 HttpMethod.GET
         );
 
+
+        //----DIRECTOR-----
+
+
+        //----REMOVE USER END POINT
+
+        //----REMOVE FILM END POINT
+
+
+        //----RECOMMENDATIONS------
+
+//        this.template("User id=1 Get film recommendations if no likes",
+//                "users/1/recommendations",
+//                "",
+//                "[]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//        this.template("Film id=3 create",
+//                "films",
+//                "{\n" +
+//                        "  \"name\": \"New film with director\",\n" +
+//                        "  \"releaseDate\": \"1999-04-30\",\n" +
+//                        "  \"description\": \"Film with director\",\n" +
+//                        "  \"duration\": 120,\n" +
+//                        "  \"mpa\": { \"id\": 3},\n" +
+//                        "  \"genres\": [{ \"id\": 1}]\n" +
+//                        "}",
+//                "{\"id\":3,\"name\":\"New film with director\",\"description\":\"Film with director\",\"releaseDate\":\"1999-04-30\",\"duration\":120,\"genres\":[{\"id\":1,\"name\":\"Комедия\"}],\"mpa\":{\"id\":3,\"name\":null},\"directors\":[]}",
+//                MediaType.APPLICATION_JSON,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.POST
+//        );
+//        this.template("Film id=3 Add like from user id=1",
+//                "films/3/like/1",
+//                "",
+//                "",
+//                MediaType.ALL,
+//                null,
+//                HttpStatus.OK,
+//                HttpMethod.PUT
+//        );
+//        this.template("User id=1 Get film recommendations if no the same likes",
+//                "users/1/recommendations",
+//                "",
+//                "[]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//        this.template("Film id=3 Add like from user id=2",
+//                "films/3/like/2",
+//                "",
+//                "",
+//                MediaType.ALL,
+//                null,
+//                HttpStatus.OK,
+//                HttpMethod.PUT
+//        );
+//        this.template("User id=1 Get film recommendations if the same likes",
+//                "users/1/recommendations",
+//                "",
+//                "[]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//        this.template("Film id=2 Add like from user id=2",
+//                "films/2/like/2",
+//                "",
+//                "",
+//                MediaType.ALL,
+//                null,
+//                HttpStatus.OK,
+//                HttpMethod.PUT
+//        );
+//        this.template("User id=1 Get film recommendations from user id=2",
+//                "users/1/recommendations",
+//                "",
+//                "[{\"id\":2,\"name\":\"New film\",\"description\":\"New film about friends\",\"releaseDate\":\"1999-04-30\",\"duration\":120,\"genres\":[{\"id\":1,\"name\":\"Комедия\"},{\"id\":2,\"name\":\"Драма\"}],\"mpa\":{\"id\":3,\"name\":\"PG-13\"},\"directors\":[]}]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//        this.template("User id=2 Get film recommendations if the same likes",
+//                "users/2/recommendations",
+//                "",
+//                "[]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//        this.template("Film id=1 Add like from user id=1",
+//                "films/1/like/1",
+//                "",
+//                "",
+//                MediaType.ALL,
+//                null,
+//                HttpStatus.OK,
+//                HttpMethod.PUT
+//        );
+//        this.template("User id=2 Get film recommendations from user id=1",
+//                "users/2/recommendations",
+//                "",
+//                "[{\"id\":1,\"name\":\"Film Updated\",\"description\":\"New film update decription\",\"releaseDate\":\"1989-04-17\",\"duration\":190,\"genres\":[],\"mpa\":{\"id\":5,\"name\":\"NC-17\"},\"directors\":[]}]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//
+//        //-----SEARCH-----
+//
+//        this.template("Film id=3 with director add Like",
+//                "films/3/like/1",
+//                "",
+//                "",
+//                MediaType.ALL,
+//                null,
+//                HttpStatus.OK,
+//                HttpMethod.PUT
+//        );
+//        this.template("Search films anyway by upDatE",
+//                "films/search?query=upDatE&by=title,director",
+//                "",
+//                "[{\"id\":3,\"name\":\"New film with director\",\"description\":\"Film with director\",\"releaseDate\":\"1999-04-30\",\"duration\":120,\"genres\":[{\"id\":1,\"name\":\"Комедия\"}],\"mpa\":{\"id\":3,\"name\":\"PG-13\"},\"directors\":[{\"id\":1,\"name\":\"Director updated\"}]},{\"id\":1,\"name\":\"Film Updated\",\"description\":\"New film update decription\",\"releaseDate\":\"1989-04-17\",\"duration\":190,\"genres\":[],\"mpa\":{\"id\":5,\"name\":\"NC-17\"},\"directors\":[]}]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//        this.template("Search films anyway empty",
+//                "films/search?query=не найти&by=director,title",
+//                "",
+//                "[]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//        this.template("Search films by title",
+//                "films/search?query=UPdat&by=title",
+//                "",
+//                "[{\"id\":1,\"name\":\"Film Updated\",\"description\":\"New film update decription\",\"releaseDate\":\"1989-04-17\",\"duration\":190,\"genres\":[],\"mpa\":{\"id\":5,\"name\":\"NC-17\"},\"directors\":[]}]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+//        this.template("Search films by director",
+//                "films/search?query=upDATE&by=director",
+//                "",
+//                "[{\"id\":3,\"name\":\"New film with director\",\"description\":\"Film with director\",\"releaseDate\":\"1999-04-30\",\"duration\":120,\"genres\":[{\"id\":1,\"name\":\"Комедия\"}],\"mpa\":{\"id\":3,\"name\":\"PG-13\"},\"directors\":[{\"id\":1,\"name\":\"Director updated\"}]}]",
+//                MediaType.ALL,
+//                MediaType.APPLICATION_JSON,
+//                HttpStatus.OK,
+//                HttpMethod.GET
+//        );
+
+        //-----REVIEWS-------
+
+
+        //-----FEED-------
+
+
+        //-----COMMON FILMS-------
+
+
+
         //add-most-popular
         this.template("Film get Popular with genre id=1",
                 "films/popular?genreId=1",
@@ -815,8 +991,6 @@ public class EndpointsTests {
                 HttpMethod.GET
         );
 
-
-        //----DIRECTOR-----
         this.template("Get all directors before create",
                 "directors",
                 "",
