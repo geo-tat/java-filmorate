@@ -8,13 +8,16 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
@@ -115,12 +118,95 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sql, mapper, directorId);
     }
 
-
     public boolean deleteFilmById(int filmId) {
         String sql = "DELETE FROM film WHERE film_id = ?";
         jdbcTemplate.update(sql, filmId);
         return jdbcTemplate.update(sql, filmId) > 0;
     }
 
+    public Collection<Film> getCommonFilms(int userId, int friendId) {
+        String sql = "SELECT * " +
+                "FROM film AS f " +
+                "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "JOIN film_user_like AS A ON A.film_id = f.film_id AND A.user_id = ? " +
+                "JOIN film_user_like AS B ON B.film_id = f.film_id AND B.user_id = ? " +
+                "JOIN (SELECT film_id, COUNT(user_id) AS rate " +
+                "FROM film_user_like GROUP BY film_id) AS l ON (l.film_id = f.film_id) " +
+                "ORDER BY l.rate DESC;";
+        return jdbcTemplate.query(sql, mapper, userId, friendId);
+    }
 
+    @Override
+    public List<Film> search(String query, List<String> by) {
+
+        if (by.size() == 2) {
+            if (by.contains("title") && by.contains("director")) {
+                return searchByTitleAndDirector(query);
+            } else {
+                throw new IncorrectParameterException("Указаны неверные параметры поиска");
+            }
+        } else if (by.size() == 1) {
+            if (by.get(0).equals("title")) {
+                return searchByTitle(query);
+            } else if (by.get(0).equals("director")) {
+                return searchByDirector(query);
+            }
+        }
+        throw new IncorrectParameterException("Отсутствуют параметры поиска");
+    }
+
+    private List<Film> searchByTitleAndDirector(String query) {
+
+        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
+                "COUNT(ful.film_id) AS rate " +
+                "FROM film AS f " +
+                "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN director d ON d.director_id = fd.director_id " +
+                "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                "WHERE f.film_id IN (SELECT film_id " +
+                "                   FROM film_director " +
+                "                   WHERE director_id IN (SELECT director_id " +
+                "                                       FROM director " +
+                "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
+                "OR LOWER(f.name) LIKE LOWER(?) " +
+                "GROUP BY f.film_id " +
+                "ORDER BY rate DESC;";
+
+        return jdbcTemplate.query(sql, mapper, "%" + query + "%", "%" + query + "%");
+    }
+
+    private List<Film> searchByTitle(String query) {
+
+        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, " +
+                "COUNT(ful.film_id) AS rate " +
+                "FROM film AS f " +
+                "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                "WHERE LOWER(f.name) LIKE LOWER(?) " +
+                "GROUP BY f.film_id " +
+                "ORDER BY rate DESC;";
+
+        return jdbcTemplate.query(sql, mapper, "%" + query + "%");
+    }
+
+    private List<Film> searchByDirector(String query) {
+
+        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
+                "COUNT(ful.film_id) AS rate " +
+                "FROM film AS f " +
+                "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN director d ON d.director_id = fd.director_id " +
+                "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
+                "WHERE f.film_id IN (SELECT film_id " +
+                "                   FROM film_director " +
+                "                   WHERE director_id IN (SELECT director_id " +
+                "                                       FROM director " +
+                "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
+                "GROUP BY f.film_id " +
+                "ORDER BY rate DESC;";
+
+        return jdbcTemplate.query(sql, mapper, "%" + query + "%");
+    }
 }
