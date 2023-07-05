@@ -4,9 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
-
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
