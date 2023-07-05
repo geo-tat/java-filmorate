@@ -49,4 +49,10 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleReviewNotFound(final ReviewNotFoundException e) {
+        log.error("Отзыва с данным ID не существует.", e);
+        return new ErrorResponse(e.getMessage());
+    }
 }
