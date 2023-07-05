@@ -15,7 +15,8 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
@@ -121,8 +122,21 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sql, filmId);
         return jdbcTemplate.update(sql, filmId) > 0;
     }
+  
+      public Collection<Film> getCommonFilms(int userId, int friendId) {
+        String sql = "SELECT * " +
+                "FROM film AS f " +
+                "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+                "JOIN film_user_like AS A ON A.film_id = f.film_id AND A.user_id = ? " +
+                "JOIN film_user_like AS B ON B.film_id = f.film_id AND B.user_id = ? " +
+                "JOIN (SELECT film_id, COUNT(user_id) AS rate " +
+                "FROM film_user_like GROUP BY film_id) AS l ON (l.film_id = f.film_id) " +
+                "ORDER BY l.rate DESC;";
+        return jdbcTemplate.query(sql, mapper, userId, friendId);
+    }
 
     @Override
+
     public List<Film> search(String query, List<String> by) {
 
         if (by.size() == 2) {
@@ -195,4 +209,5 @@ public class FilmDbStorage implements FilmStorage {
 
         return jdbcTemplate.query(sql, mapper, "%" + query + "%");
     }
+
 }
