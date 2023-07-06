@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS director CASCADE;
 DROP TABLE IF EXISTS film_director CASCADE;
 DROP TABLE IF EXISTS reviews CASCADE;
 DROP TABLE IF EXISTS review_like_dislike CASCADE;
+DROP TABLE IF EXISTS feed CASCADE;
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -120,6 +121,17 @@ CREATE TABLE IF NOT EXISTS review_like_dislike
             REFERENCES users(user_id)
             ON DELETE CASCADE
     );
+
+CREATE TABLE IF NOT EXISTS feed
+(
+    event_id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
+    time_stamp TIMESTAMP NOT NULL,
+    entity_id int NOT NULL,
+    event_type varchar(10) NOT NULL,
+    operation varchar(10) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+);
 
 
 
