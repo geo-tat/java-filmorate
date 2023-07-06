@@ -4,7 +4,7 @@ import ru.yandex.practicum.filmorate.model.Director;
 
 import java.util.Collection;
 
-public interface DirectorStorage {
+public interface  DirectorStorage {
 
     Collection<Director> getDirectors();
 
