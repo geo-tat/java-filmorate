@@ -35,13 +35,11 @@ public class FilmService {
         this.director = director;
     }
 
-
     public void addLike(int filmID, int userID) {
         Film film = storage.getFilmById(filmID);
         User user1 = user.getUserById(userID);
         likeDbStorage.addLike(filmID, userID);
     }
-
 
     public void removeLike(int filmID, int userID) {
         Film film = storage.getFilmById(filmID);
@@ -128,5 +126,4 @@ public class FilmService {
         films = genre.loadGenresForFilm(films);
         return director.updateDirectorOfAllFilms(films);
     }
-
 }
