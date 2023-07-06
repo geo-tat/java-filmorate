@@ -1,4 +1,4 @@
-/*package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate;
 import org.h2.tools.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,4 +13,4 @@ public class H2Config {
         return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9091");
     }
 
-}*/
+}

@@ -51,6 +51,7 @@ public class FilmService {
 
     public List<Film> getTopFilms(int count, Optional<Integer> genreId, Optional<Integer> year) {
         List<Film> films = new ArrayList<>(likeDbStorage.getTopFilms(count, genreId, year));
+        director.updateDirectorOfAllFilms(films);
         return genre.loadGenresForFilm(films);
     }
 
