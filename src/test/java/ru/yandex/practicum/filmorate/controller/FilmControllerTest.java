@@ -12,15 +12,10 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
-import ru.yandex.practicum.filmorate.storage.dao.LikeDbStorage;
 import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
-
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmControllerTest {
     private final FilmController controller;
-    private final FilmDbStorage storage;
-    private final LikeDbStorage likeDbStorage;
     private final UserDbStorage userDbStorage;
 
     Film film;
