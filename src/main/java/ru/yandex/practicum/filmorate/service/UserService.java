@@ -13,7 +13,7 @@ import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
 
 @Service
 @Slf4j
