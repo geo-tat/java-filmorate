@@ -9,7 +9,10 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dao.*;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -80,12 +83,17 @@ public class FilmService {
 
     public List<Film> getRecommendations(int id) {
         List<Film> recommendedFilms = likeDbStorage.getRecommendations(id);
-        return genre.loadGenresForFilm(recommendedFilms);
+        return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(recommendedFilms)));
     }
 
     public boolean deleteFilmById(int filmId) {
         Film filmToDelete = storage.getFilmById(filmId);
-       return storage.deleteFilmById(filmId);
+        return storage.deleteFilmById(filmId);
+    }
+
+    public List<Film> search(String query, List<String> by) {
+        List<Film> films = storage.search(query, by);
+        return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(films)));
     }
 
     private void filmValidation(Film film) {
@@ -110,6 +118,12 @@ public class FilmService {
     public Collection<Film> getFilmOfDirectorSortBy(int directorId, String sortParam) {
         director.getDirectorById(directorId);
         Collection<Film> films = storage.getFilmOfDirectorSortBy(directorId, sortParam);
+        films = genre.loadGenresForFilm(films);
+        return director.updateDirectorOfAllFilms(films);
+    }
+
+    public Collection<Film> getCommonFilms(int userId, int friendId) {
+        Collection<Film> films = new ArrayList<>(storage.getCommonFilms(userId, friendId));
         films = genre.loadGenresForFilm(films);
         return director.updateDirectorOfAllFilms(films);
     }

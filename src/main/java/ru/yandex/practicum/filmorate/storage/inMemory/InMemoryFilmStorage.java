@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 
 @Slf4j
@@ -61,8 +62,18 @@ public class InMemoryFilmStorage implements FilmStorage {
         return false;
     }
 
+    @Override
+    public List<Film> search(String query, List<String> by) {
+        return null;
+    }
+
     public void clear() {
         films.clear();
         filmId = 0;
+    }
+
+    @Override
+    public Collection<Film> getCommonFilms(int userId, int friendId) {
+        return null;
     }
 }
