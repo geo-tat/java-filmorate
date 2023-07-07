@@ -24,6 +24,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+//@TestExecutionListeners({DirtiesContextTestExecutionListener.class})
+//@Sql(scripts = "/init.sql")
+//@Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class LikeDbStorageTest {
     private final FilmController filmController;
     private final UserController userController;
@@ -87,6 +90,7 @@ public class LikeDbStorageTest {
         filmController.addLike(1, 1);
         filmController.addLike(1, 2);
         filmController.addLike(2, 1);
+        System.out.println("фильмы в базе: " + filmController.getFilms());
 
         List<Film> filmList = filmController.topPopularFilms(2, Optional.empty(), Optional.empty());
         assertThat(filmList.get(0).getName()).isEqualTo("Iron Man");
