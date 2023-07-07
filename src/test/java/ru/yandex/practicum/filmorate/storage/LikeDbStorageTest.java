@@ -18,10 +18,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@AutoConfigureTestDatabase
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class LikeDbStorageTest {
@@ -108,6 +108,6 @@ public class LikeDbStorageTest {
         filmController.addLike(3, 3);
 
         List<Film> recommendedFilms = likeDbStorage.getRecommendations(2);
-        //assertThat(recommendedFilms.get(0).getName()).isEqualTo("Spider Man 2");
+        assertThat(recommendedFilms.get(0).getName()).isEqualTo("Spider Man 2");
     }
 }

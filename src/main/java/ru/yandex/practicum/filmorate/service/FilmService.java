@@ -131,5 +131,4 @@ public class FilmService {
         films = genre.loadGenresForFilm(films);
         return director.updateDirectorOfAllFilms(films);
     }
-
 }
