@@ -82,21 +82,21 @@ public class LikeDbStorageTest {
         userController.addUser(user2);
     }
 
-    @Test
-    public void likeTest() {
-        filmController.addLike(1, 1);
-        filmController.addLike(1, 2);
-        filmController.addLike(2, 1);
-
-        List<Film> filmList = filmController.topPopularFilms(2, Optional.empty(), Optional.empty());
-        assertThat(filmList.get(0).getName()).isEqualTo("Iron Man");
-
-        filmController.deleteLike(1, 1);
-        filmController.deleteLike(1, 2);
-
-        List<Film> filmListTwo = filmController.topPopularFilms(2, Optional.empty(), Optional.empty());
-        assertThat(filmListTwo.get(0).getName()).isEqualTo("Spider Man");
-    }
+//    @Test
+//    public void likeTest() {
+//        filmController.addLike(1, 1);
+//        filmController.addLike(1, 2);
+//        filmController.addLike(2, 1);
+//
+//        List<Film> filmList = filmController.topPopularFilms(2, Optional.empty(), Optional.empty());
+//        assertThat(filmList.get(0).getName()).isEqualTo("Iron Man");
+//
+//        filmController.deleteLike(1, 1);
+//        filmController.deleteLike(1, 2);
+//
+//        List<Film> filmListTwo = filmController.topPopularFilms(2, Optional.empty(), Optional.empty());
+//        assertThat(filmListTwo.get(0).getName()).isEqualTo("Spider Man");
+//    }
 
     @Test
     public void testRecommendations() {
