@@ -11,8 +11,12 @@ import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MPA;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
+
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FilmControllerTest {
     private final FilmController controller;
+    private final UserDbStorage userDbStorage;
 
     Film film;
     Film film1;
@@ -114,5 +119,39 @@ public class FilmControllerTest {
         });
         // Then
         assertEquals("Фильм c Id: 33 не найден.", exception.getMessage());
+    }
+
+    @Test
+    public void getCommonFilmsTest() {
+        // Given
+        User user1 = User.builder()
+                .email("user1@yandex.ru")
+                .login("user1")
+                .name("User One")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .build();
+        User user2 = User.builder()
+                .email("user2@yandex.ru")
+                .login("user2")
+                .name("User Two")
+                .birthday(LocalDate.of(2002, 1, 1))
+                .build();
+
+        int userId = userDbStorage.addUser(user1).getId();
+        int friendId = userDbStorage.addUser(user2).getId();
+
+        int filmId1 = controller.addFilm(film).getId();
+        int filmId2 = controller.addFilm(film1).getId();
+
+        controller.addLike(filmId1, userId);
+        controller.addLike(filmId1, friendId);
+        controller.addLike(filmId2, friendId);
+
+        // When
+        Collection<Film> commonFilms = controller.getCommonFilms(userId, friendId);
+
+        // Then
+        assertEquals(1, commonFilms.size());
+        assertTrue(commonFilms.contains(film));
     }
 }
