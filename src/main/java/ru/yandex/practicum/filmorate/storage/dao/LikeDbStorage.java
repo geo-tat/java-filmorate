@@ -114,12 +114,13 @@ public class LikeDbStorage implements LikeStorage {
                 "FROM film AS f " +
                 "LEFT JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
                 "WHERE f.film_id IN (SELECT film_id " +
-                "FROM film_user_like " +
-                "WHERE user_id IN (SELECT u2.user_id " +
-                "FROM film_user_like u1, film_user_like u2 " +
-                "where u1.film_id = u2.film_id and u1.user_id <> u2.user_id and u1.user_id = ? " +
-                "group by u2.user_id " +
-                "LIMIT 1) " +
+                                    "FROM film_user_like " +
+                                    "WHERE user_id IN (SELECT u2.user_id " +
+                                                "FROM film_user_like u1, film_user_like u2 " +
+                                                "WHERE u1.film_id = u2.film_id and " +
+                                                "u1.user_id <> u2.user_id and u1.user_id = ? " +
+                                                "GROUP BY u2.user_id " +
+                                                "LIMIT 1) " +
                 "ORDER BY film_id);";
 
         List<Film> filmLikedByOtherUser = jdbcTemplate.query(sqlOtherUserFilms, mapper, userId);

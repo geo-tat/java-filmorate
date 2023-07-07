@@ -108,6 +108,7 @@ public class LikeDbStorageTest {
         filmController.addLike(3, 3);
 
         List<Film> recommendedFilms = likeDbStorage.getRecommendations(2);
+        System.out.println("recommendations for user 2: " + recommendedFilms.toString());
         assertThat(recommendedFilms.get(0).getName()).isEqualTo("Spider Man 2");
     }
 }
