@@ -13,8 +13,7 @@ import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 
 import java.sql.PreparedStatement;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
@@ -88,13 +87,14 @@ public class ReviewDbStorage implements ReviewStorage {
         }
     }
 
-    public void updateUseful(int reviewId, boolean isLike) {
-        if (isLike) {
-            String sqlInc = "UPDATE reviews SET useful = useful + 1 WHERE review_id = ?";
-            jdbcTemplate.update(sqlInc, reviewId);
-        } else {
-            String sqlDec = "UPDATE reviews SET useful = useful - 1 WHERE review_id = ?";
-            jdbcTemplate.update(sqlDec, reviewId);
-        }
+    public void updateUseful(int reviewId) {
+        String sql = "UPDATE reviews AS r SET useful = " +
+                "(SELECT COUNT(*) FILTER (WHERE ld.is_like) - COUNT(*) FILTER (WHERE NOT ld.is_like) " +
+                "FROM review_like_dislike AS ld " +
+                "WHERE ld.review_id = r.review_id) " +
+                "WHERE r.review_id = ?";
+        jdbcTemplate.update(sql, reviewId);
     }
+
 }
+
