@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
