@@ -132,7 +132,7 @@ public class FilmDbStorage implements FilmStorage {
                 "JOIN film_user_like AS B ON B.film_id = f.film_id AND B.user_id = ? " +
                 "JOIN (SELECT film_id, COUNT(user_id) AS rate " +
                 "FROM film_user_like GROUP BY film_id) AS l ON (l.film_id = f.film_id) " +
-                "ORDER BY l.rate DESC;";
+                "ORDER BY l.rate DESC";
         return jdbcTemplate.query(sql, mapper, userId, friendId);
     }
 
@@ -171,7 +171,7 @@ public class FilmDbStorage implements FilmStorage {
                 "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
                 "OR LOWER(f.name) LIKE LOWER(?) " +
                 "GROUP BY f.film_id " +
-                "ORDER BY rate DESC;";
+                "ORDER BY rate DESC";
 
         return jdbcTemplate.query(sql, mapper, "%" + query + "%", "%" + query + "%");
     }
@@ -185,7 +185,7 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
                 "WHERE LOWER(f.name) LIKE LOWER(?) " +
                 "GROUP BY f.film_id " +
-                "ORDER BY rate DESC;";
+                "ORDER BY rate DESC";
 
         return jdbcTemplate.query(sql, mapper, "%" + query + "%");
     }
@@ -205,7 +205,7 @@ public class FilmDbStorage implements FilmStorage {
                 "                                       FROM director " +
                 "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
                 "GROUP BY f.film_id " +
-                "ORDER BY rate DESC;";
+                "ORDER BY rate DESC";
 
         return jdbcTemplate.query(sql, mapper, "%" + query + "%");
     }

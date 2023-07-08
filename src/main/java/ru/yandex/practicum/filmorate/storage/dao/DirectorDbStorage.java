@@ -14,10 +14,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.DirectorStorage;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.function.Function.identity;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
@@ -29,7 +29,7 @@ public class DirectorDbStorage implements DirectorStorage {
 
     @Override
     public Collection<Director> getDirectors() {
-        String sql = "SELECT * FROM director ORDER BY director_id ASC";
+        String sql = "SELECT * FROM director ORDER BY name ASC";
         return jdbcTemplate.query(sql, mapper);
     }
 
@@ -84,7 +84,7 @@ public class DirectorDbStorage implements DirectorStorage {
         int filmId = film.getId();
         List<Director> directors = (List<Director>) film.getDirectors();
 
-        String sqlDelete = "DELETE FROM public.film_director WHERE film_id = ? ";
+        String sqlDelete = "DELETE FROM film_director WHERE film_id = ? ";
         jdbcTemplate.update(sqlDelete, filmId);
 
         if (directors == null || directors.size() == 0) {
@@ -92,7 +92,7 @@ public class DirectorDbStorage implements DirectorStorage {
             return film;
         }
 
-        String sqlQuery = "MERGE INTO public.film_director (film_id, director_id) values (?, ?)";
+        String sqlQuery = "MERGE INTO film_director (film_id, director_id) values (?, ?)";
 
         for (Director director : directors) {
 
@@ -114,23 +114,29 @@ public class DirectorDbStorage implements DirectorStorage {
 
     public List<Director> getDirectors(int filmId) {
 
-        String sql = "SELECT d.director_id , d.name  \n" +
-                "FROM public.director AS d\n" +
-                "INNER JOIN\n" +
-                "public.film_director AS fd ON fd.director_id = d.director_id  AND fd.film_id = ?";
+        String sql = "SELECT d.director_id , d.name  " +
+                "FROM director AS d " +
+                "INNER JOIN " +
+                "film_director AS fd ON fd.director_id = d.director_id  AND fd.film_id = ?";
 
-        List<Director> directors = jdbcTemplate.query(sql, (rs, rowNum) -> mapper.mapRow(rs, rowNum), filmId);
-
-        return directors;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapper.mapRow(rs, rowNum), filmId);
 
     }
 
     public Collection<Film> updateDirectorOfAllFilms(Collection<Film> films) {
-        if (films != null && films.size() != 0) {
-            for (Film film : films) {
-                film.setDirectors(getDirectors(film.getId()));
-            }
-        }
+
+        Map<Integer, Film> filmMap = films.stream().collect(Collectors.toMap(Film::getId, identity()));
+        String sql = "SELECT fd.film_id, fd.director_id , d.name  " +
+                "FROM film_director AS fd " +
+                "LEFT JOIN director AS d ON fd.director_id = d.director_id " +
+                "WHERE fd.film_id IN (" + String.join(",", Collections.nCopies(films.size(), "?")) + ")";
+        jdbcTemplate.query(sql, (rs) -> {
+            filmMap.get(rs.getInt("film_id")).getDirectors().add(Director.builder()
+                    .id(rs.getInt("director_id"))
+                    .name(rs.getString("name"))
+                    .build());
+        }, filmMap.keySet().toArray());
+
         return films;
     }
 
