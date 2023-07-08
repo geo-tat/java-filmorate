@@ -1,2 +1,2 @@
-# java-filmorate. Спринт 12: Групповой проект
-
+# java-filmorate
+Template repository for Filmorate project.
