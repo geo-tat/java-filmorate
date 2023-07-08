@@ -98,7 +98,7 @@ public class UserService {
     }
 
     public Collection<Feed> getFeed(int id) {
-        User user = storage.getUserById(id);
+        storage.getUserById(id);
         return feedStorage.getFeed(id);
     }
 }

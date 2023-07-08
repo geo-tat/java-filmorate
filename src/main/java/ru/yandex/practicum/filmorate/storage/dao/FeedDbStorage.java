@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,6 @@ import java.util.Collection;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
-@Slf4j
 public class FeedDbStorage implements FeedStorage {
     private final JdbcTemplate jdbcTemplate;
     private final FeedMapper feedMapper;
