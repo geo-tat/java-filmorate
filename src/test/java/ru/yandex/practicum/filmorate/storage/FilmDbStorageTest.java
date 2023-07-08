@@ -20,7 +20,7 @@ import java.util.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-@AutoConfigureTestDatabase
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FilmDbStorageTest {
@@ -122,19 +122,19 @@ public class FilmDbStorageTest {
 
     @Test
     public void testSearchByTitle() {
-        List<Film> searchByTitle = controller.search("irOn", List.of("title"));
+        List<Film> searchByTitle = new ArrayList<>(controller.search("irOn", List.of("title")));
         assertThat(searchByTitle.get(0).getName().equals("Iron Man"));
     }
 
     @Test
     public void testSearchByDirector() {
-        List<Film> searchByDirector = controller.search("sAm", List.of("director"));
+        List<Film> searchByDirector = new ArrayList<>(controller.search("sAm", List.of("director")));
         assertThat(searchByDirector.get(0).getName().equals("Spider Man"));
     }
 
     @Test
     public void testSearchByTitleAndDirector() {
-        List<Film> searchByTitleAndDirector = controller.search("sPi", List.of("director", "title"));
+        List<Film> searchByTitleAndDirector = new ArrayList<>(controller.search("sPi", List.of("director", "title")));
         assertThat(searchByTitleAndDirector.get(0).getName().equals("Spider Man"));
     }
 }

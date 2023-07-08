@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.model.EventType;
+import ru.yandex.practicum.filmorate.model.Operation;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.dao.ReviewDbStorage;
 import ru.yandex.practicum.filmorate.storage.dao.ReviewLikeDbStorage;
@@ -22,18 +25,25 @@ public class ReviewService {
     private final UserDbStorage userDbStorage;
     private final FilmDbStorage filmDbStorage;
     private final ReviewLikeDbStorage likeDbStorage;
+    private final FeedStorage feedStorage;
 
     public Review addReview(Review review) {
         validation(review);
-        return storage.addReview(review);
+        Review addedReview = storage.addReview(review);
+        feedStorage.addFeed(addedReview.getUserId(), addedReview.getReviewId(), EventType.REVIEW, Operation.ADD);
+        return addedReview;
     }
 
     public Review updateReview(Review review) {
         validation(review);
-        return storage.updateReview(review);
+        Review updatedReview = storage.updateReview(review);
+        feedStorage.addFeed(updatedReview.getUserId(), updatedReview.getReviewId(), EventType.REVIEW, Operation.UPDATE);
+        return updatedReview;
     }
 
     public boolean deleteReview(int id) {
+        Review review = storage.getReviewById(id);
+        feedStorage.addFeed(review.getUserId(), review.getReviewId(), EventType.REVIEW, Operation.REMOVE);
         return storage.deleteReview(id);
     }
 

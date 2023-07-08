@@ -19,7 +19,7 @@ public interface FilmStorage {
 
     boolean deleteFilmById(int filmId);
 
-    List<Film> search(String query, List<String> by);
+    Collection<Film> search(String query, List<String> by);
 
     Collection<Film> getCommonFilms(int userId, int friendId);
 }

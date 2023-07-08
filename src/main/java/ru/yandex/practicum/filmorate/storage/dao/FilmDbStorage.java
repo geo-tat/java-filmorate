@@ -132,12 +132,12 @@ public class FilmDbStorage implements FilmStorage {
                 "JOIN film_user_like AS B ON B.film_id = f.film_id AND B.user_id = ? " +
                 "JOIN (SELECT film_id, COUNT(user_id) AS rate " +
                 "FROM film_user_like GROUP BY film_id) AS l ON (l.film_id = f.film_id) " +
-                "ORDER BY l.rate DESC;";
+                "ORDER BY l.rate DESC";
         return jdbcTemplate.query(sql, mapper, userId, friendId);
     }
 
     @Override
-    public List<Film> search(String query, List<String> by) {
+    public Collection<Film> search(String query, List<String> by) {
 
         if (by.size() == 2) {
             if (by.contains("title") && by.contains("director")) {
@@ -155,7 +155,7 @@ public class FilmDbStorage implements FilmStorage {
         throw new IncorrectParameterException("Отсутствуют параметры поиска");
     }
 
-    private List<Film> searchByTitleAndDirector(String query) {
+    private Collection<Film> searchByTitleAndDirector(String query) {
 
         String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
                 "COUNT(ful.film_id) AS rate " +
@@ -171,12 +171,12 @@ public class FilmDbStorage implements FilmStorage {
                 "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
                 "OR LOWER(f.name) LIKE LOWER(?) " +
                 "GROUP BY f.film_id " +
-                "ORDER BY rate DESC;";
+                "ORDER BY rate DESC";
 
         return jdbcTemplate.query(sql, mapper, "%" + query + "%", "%" + query + "%");
     }
 
-    private List<Film> searchByTitle(String query) {
+    private Collection<Film> searchByTitle(String query) {
 
         String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, " +
                 "COUNT(ful.film_id) AS rate " +
@@ -185,12 +185,12 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN film_user_like AS ful ON ful.film_id = f.film_id " +
                 "WHERE LOWER(f.name) LIKE LOWER(?) " +
                 "GROUP BY f.film_id " +
-                "ORDER BY rate DESC;";
+                "ORDER BY rate DESC";
 
         return jdbcTemplate.query(sql, mapper, "%" + query + "%");
     }
 
-    private List<Film> searchByDirector(String query) {
+    private Collection<Film> searchByDirector(String query) {
 
         String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, m.name, d.name, " +
                 "COUNT(ful.film_id) AS rate " +
@@ -205,7 +205,7 @@ public class FilmDbStorage implements FilmStorage {
                 "                                       FROM director " +
                 "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
                 "GROUP BY f.film_id " +
-                "ORDER BY rate DESC;";
+                "ORDER BY rate DESC";
 
         return jdbcTemplate.query(sql, mapper, "%" + query + "%");
     }

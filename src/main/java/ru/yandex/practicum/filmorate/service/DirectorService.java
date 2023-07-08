@@ -42,7 +42,7 @@ public class DirectorService {
 
     private void directorValidation(Director director) {
         String name = director.getName();
-        if (name.isEmpty() || name.trim().isEmpty() || name == null) {
+        if (name == null || name.isEmpty() || name.trim().isEmpty()) {
             log.error("Имя директора не указано");
             throw new ValidationException("Название не может быть пустым");
         }

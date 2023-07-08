@@ -7,7 +7,5 @@ import lombok.Data;
 @Builder
 public class Director {
     private int id;
-   /* @NonNull
-    @NotBlank*/
     private String name;
 }

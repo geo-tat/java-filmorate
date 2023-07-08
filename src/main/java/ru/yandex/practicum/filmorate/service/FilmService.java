@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Operation;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dao.*;
 
@@ -22,35 +24,37 @@ public class FilmService {
     private final GenreDbStorage genre;
     private final UserDbStorage user;
     private final LikeDbStorage likeDbStorage;
-
     private final DirectorDbStorage director;
+    private final FeedDbStorage feedDbStorage;
     private static final LocalDate FIRST_MOVIE_EVER = LocalDate.of(1895, 12, 28);
 
     @Autowired
-    FilmService(FilmDbStorage storage, GenreDbStorage genre, UserDbStorage user, LikeDbStorage likeDbStorage, DirectorDbStorage director) {
+    public FilmService(FilmDbStorage storage, GenreDbStorage genre, UserDbStorage user, LikeDbStorage likeDbStorage, DirectorDbStorage director, FeedDbStorage feedDbStorage) {
         this.storage = storage;
         this.genre = genre;
         this.user = user;
         this.likeDbStorage = likeDbStorage;
         this.director = director;
+        this.feedDbStorage = feedDbStorage;
     }
-
 
     public void addLike(int filmID, int userID) {
         Film film = storage.getFilmById(filmID);
         User user1 = user.getUserById(userID);
         likeDbStorage.addLike(filmID, userID);
+        feedDbStorage.addFeed(userID, filmID, EventType.LIKE, Operation.ADD);
     }
-
 
     public void removeLike(int filmID, int userID) {
         Film film = storage.getFilmById(filmID);
         User user1 = user.getUserById(userID);
         likeDbStorage.removeLike(filmID, userID);
+        feedDbStorage.addFeed(userID, filmID, EventType.LIKE, Operation.REMOVE);
     }
 
     public List<Film> getTopFilms(int count, Optional<Integer> genreId, Optional<Integer> year) {
-        List<Film> films = new ArrayList<>(likeDbStorage.getTopFilms(count, genreId, year));
+        Collection<Film> films = likeDbStorage.getTopFilms(count, genreId, year);
+        director.updateDirectorOfAllFilms(films);
         return genre.loadGenresForFilm(films);
     }
 
@@ -81,9 +85,9 @@ public class FilmService {
         return film;
     }
 
-    public List<Film> getRecommendations(int id) {
-        List<Film> recommendedFilms = likeDbStorage.getRecommendations(id);
-        return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(recommendedFilms)));
+    public Collection<Film> getRecommendations(int id) {
+        Collection<Film> recommendedFilms = likeDbStorage.getRecommendations(id);
+        return director.updateDirectorOfAllFilms(genre.loadGenresForFilm(recommendedFilms));
     }
 
     public boolean deleteFilmById(int filmId) {
@@ -91,9 +95,9 @@ public class FilmService {
         return storage.deleteFilmById(filmId);
     }
 
-    public List<Film> search(String query, List<String> by) {
-        List<Film> films = storage.search(query, by);
-        return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(films)));
+    public Collection<Film> search(String query, List<String> by) {
+        Collection<Film> films = storage.search(query, by);
+        return director.updateDirectorOfAllFilms(genre.loadGenresForFilm(films));
     }
 
     private void filmValidation(Film film) {
@@ -127,5 +131,4 @@ public class FilmService {
         films = genre.loadGenresForFilm(films);
         return director.updateDirectorOfAllFilms(films);
     }
-
 }

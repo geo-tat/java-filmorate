@@ -57,9 +57,8 @@ public class FilmController {
     }
 
     @GetMapping("/films/director/{directorId}")
-    public Collection<Film> getFilmOfDirectorSortBy(@PathVariable int directorId, @RequestParam(defaultValue = "year") Optional<String> sortBy) {
-        String sortParam = sortBy.get();
-        return service.getFilmOfDirectorSortBy(directorId, sortParam);
+    public Collection<Film> getFilmOfDirectorSortBy(@PathVariable int directorId, @RequestParam(defaultValue = "year") String sortBy) {
+        return service.getFilmOfDirectorSortBy(directorId, sortBy);
     }
 
     // GET /users/{id}/recommendations
@@ -75,7 +74,7 @@ public class FilmController {
     }
 
     @GetMapping("/films/search")
-    public List<Film> search(@RequestParam String query, @RequestParam List<String> by) {
+    public Collection<Film> search(@RequestParam String query, @RequestParam List<String> by) {
         return service.search(query, by);
     }
 
