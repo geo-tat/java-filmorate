@@ -8,7 +8,7 @@ import lombok.Data;
 public class Feed {
     private int eventId;
     private int userId;
-    private Long timestamp;
+    private long timestamp;
     private int entityId;
     private EventType eventType;
     private Operation operation;

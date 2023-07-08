@@ -17,7 +17,6 @@ import java.util.Collection;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
-@Slf4j
 public class FeedDbStorage implements FeedStorage {
     private final JdbcTemplate jdbcTemplate;
     private final FeedMapper feedMapper;
