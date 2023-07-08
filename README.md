@@ -4,16 +4,16 @@
 
 ## Состав команды
 
-[//]: # (- [Георгий Татевосян]&#40;https://github.com/geo-tat&#41; - тим лид)
+- [Георгий Татевосян](https://github.com/geo-tat) - тим лид
 
-[//]: # (- [Дарья Серова]&#40;https://github.com/dserova&#41;)
+- [Дарья Серова](https://github.com/dserova)
 
-[//]: # (- [Руслан Захаров]&#40;https://github.com/14winter&#41;)
+- [Руслан Захаров](https://github.com/14winter)
 
-[//]: # (- [Ольга Образцова]&#40;https://github.com/olgaobraztsova&#41;)
+- [Ольга Образцова](https://github.com/olgaobraztsova)
 
 
-[//]: # (## Распределение задач &#40;[Доска]&#40;https://github.com/users/geo-tat/projects/1&#41;&#41;)
+## Распределение задач ([Доска](https://github.com/users/geo-tat/projects/1))
 - Георгий:
 - [x] Функциональность "Удаление фильмов и пользователей"
 - [x] Функциональность "Отзывы"
