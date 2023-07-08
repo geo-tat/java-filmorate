@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -107,7 +106,7 @@ public class LikeDbStorage implements LikeStorage {
     }
 
     @Override
-    public List<Film> getRecommendations(int userId) {
+    public Collection<Film> getRecommendations(int userId) {
         //Найти все фильмы, которым поставил лайк пользователь с максимальным количеством пересечений по лайкам.
         String sqlOtherUserFilms = "SELECT f.film_id, f.name, f.description, f.release_date, " +
                 "f.duration, m.mpa_id, m.name " +
@@ -121,9 +120,9 @@ public class LikeDbStorage implements LikeStorage {
                                                 "u1.user_id <> u2.user_id and u1.user_id = ? " +
                                                 "GROUP BY u2.user_id " +
                                                 "LIMIT 1) " +
-                "ORDER BY film_id);";
+                "ORDER BY film_id)";
 
-        List<Film> filmLikedByOtherUser = jdbcTemplate.query(sqlOtherUserFilms, mapper, userId);
+        Collection<Film> filmLikedByOtherUser = jdbcTemplate.query(sqlOtherUserFilms, mapper, userId);
 
         //найти все лайки текущего пользователя
         String sqlCurrentUserFilms = "SELECT ful.film_id, f.name, f.description, " +
@@ -132,12 +131,12 @@ public class LikeDbStorage implements LikeStorage {
                 "JOIN film AS f ON f.film_id = ful.film_id " +
                 "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
                 "WHERE ful.user_id = ? " +
-                "ORDER BY film_id;";
+                "ORDER BY film_id";
 
-        List<Film> filmsLikedByCurrentUser = jdbcTemplate.query(sqlCurrentUserFilms, mapper, userId);
+        Collection<Film> filmsLikedByCurrentUser = jdbcTemplate.query(sqlCurrentUserFilms, mapper, userId);
 
         // Определить фильмы, которые один пролайкал, а другой нет.
-        List<Film> recommendedList = new ArrayList<>();
+        Collection<Film> recommendedList = new ArrayList<>();
         for (Film film : filmLikedByOtherUser) {
             if (!filmsLikedByCurrentUser.contains(film)) {
                 recommendedList.add(film);

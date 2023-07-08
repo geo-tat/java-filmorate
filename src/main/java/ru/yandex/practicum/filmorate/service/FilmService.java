@@ -85,9 +85,9 @@ public class FilmService {
         return film;
     }
 
-    public List<Film> getRecommendations(int id) {
-        List<Film> recommendedFilms = likeDbStorage.getRecommendations(id);
-        return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(recommendedFilms)));
+    public Collection<Film> getRecommendations(int id) {
+        Collection<Film> recommendedFilms = likeDbStorage.getRecommendations(id);
+        return director.updateDirectorOfAllFilms(genre.loadGenresForFilm(recommendedFilms));
     }
 
     public boolean deleteFilmById(int filmId) {
@@ -95,9 +95,9 @@ public class FilmService {
         return storage.deleteFilmById(filmId);
     }
 
-    public List<Film> search(String query, List<String> by) {
-        List<Film> films = storage.search(query, by);
-        return new ArrayList<>(director.updateDirectorOfAllFilms(genre.loadGenresForFilm(films)));
+    public Collection<Film> search(String query, List<String> by) {
+        Collection<Film> films = storage.search(query, by);
+        return director.updateDirectorOfAllFilms(genre.loadGenresForFilm(films));
     }
 
     private void filmValidation(Film film) {
