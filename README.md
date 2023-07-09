@@ -37,4 +37,4 @@
 
 ## Структура базы данных
 
-![Filmorate Database Diagram](/er.png)
+![Filmorate Database Diagram](ER.png)
