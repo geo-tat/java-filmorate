@@ -4,9 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
-
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,4 +24,5 @@ public class Film {
     private long duration;
     private List<Genre> genres;
     private MPA mpa;
+    private List<Director> directors;
 }

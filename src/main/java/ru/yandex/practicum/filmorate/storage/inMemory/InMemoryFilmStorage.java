@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 
 @Slf4j
@@ -52,8 +53,27 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
     }
 
+    @Override
+    public Collection<Film> getFilmOfDirectorSortBy(int directorId, String sortParam) {
+        return null;
+    }
+
+    public boolean deleteFilmById(int filmId) {
+        return false;
+    }
+
+    @Override
+    public Collection<Film> search(String query, List<String> by) {
+        return null;
+    }
+
     public void clear() {
         films.clear();
         filmId = 0;
+    }
+
+    @Override
+    public Collection<Film> getCommonFilms(int userId, int friendId) {
+        return null;
     }
 }

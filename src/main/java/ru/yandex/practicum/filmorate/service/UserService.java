@@ -4,12 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.EventType;
+import ru.yandex.practicum.filmorate.model.Feed;
+import ru.yandex.practicum.filmorate.model.Operation;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
 
 @Service
 @Slf4j
@@ -17,11 +21,13 @@ public class UserService {
 
     private final UserDbStorage storage;
     private final FriendsStorage friendStorage;
+    private final FeedStorage feedStorage;
 
     @Autowired
-    public UserService(UserDbStorage storage, FriendsStorage friendStorage) {
+    public UserService(UserDbStorage storage, FriendsStorage friendStorage, FeedStorage feedStorage) {
         this.storage = storage;
         this.friendStorage = friendStorage;
+        this.feedStorage = feedStorage;
     }
 
     public User addUser(User user) {
@@ -42,31 +48,30 @@ public class UserService {
         return storage.getUserById(id);
     }
 
-    public boolean deleteUser(int id) {
-        return storage.deleteUser(id);
+    public boolean deleteUserById(int id) {
+        return storage.deleteUserById(storage.getUserById(id).getId());
     }
 
     public void addFriend(int userId, int friendId) {
         User user = storage.getUserById(userId);
         User friend = storage.getUserById(friendId);
         friendStorage.addFriend(user, friend);
+        feedStorage.addFeed(userId, friendId, EventType.FRIEND, Operation.ADD);
     }
 
     public void deleteFriend(int userId, int friendId) {
         User user = storage.getUserById(userId);
         User friend = storage.getUserById(friendId);
         friendStorage.deleteFriend(user, friend);
+        feedStorage.addFeed(userId, friendId, EventType.FRIEND, Operation.REMOVE);
     }
 
     public Collection<User> getCommonFriends(int userId, int friendId) {
-        User user = storage.getUserById(userId);
-        User friend = storage.getUserById(friendId);
-        return friendStorage.getCommonFriends(userId, friendId);
+        return friendStorage.getCommonFriends(storage.getUserById(userId).getId(), storage.getUserById(friendId).getId());
     }
 
     public Collection<User> getFriends(int id) {
-        User user = storage.getUserById(id);
-        return friendStorage.getFriends(id);
+        return friendStorage.getFriends(storage.getUserById(id).getId());
     }
 
     private void userValidation(User user) {
@@ -86,5 +91,10 @@ public class UserService {
             log.error("Дата рождения не может быть в будущем!");
             throw new ValidationException("Дата рождения не может быть в будущем!");
         }
+    }
+
+    public Collection<Feed> getFeed(int id) {
+        storage.getUserById(id);
+        return feedStorage.getFeed(id);
     }
 }

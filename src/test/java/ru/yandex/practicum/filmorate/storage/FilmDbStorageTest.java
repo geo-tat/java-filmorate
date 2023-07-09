@@ -8,27 +8,29 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MPA;
+import ru.yandex.practicum.filmorate.storage.dao.DirectorDbStorage;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-@AutoConfigureTestDatabase
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FilmDbStorageTest {
     private final FilmController controller;
     private final FilmDbStorage storage;
+    private final DirectorDbStorage directorStorage;
 
     @BeforeEach
     void setUp() {
+
         Film film = Film.builder()
                 .name("Iron Man")
                 .description("Tony Stark")
@@ -37,7 +39,8 @@ public class FilmDbStorageTest {
                 .mpa(MPA.builder()
                         .id(3)
                         .name("PG-13")
-                        .build()).build();
+                        .build())
+                .build();
 
         Film film1 = Film.builder()
                 .name("Spider Man")
@@ -46,9 +49,16 @@ public class FilmDbStorageTest {
                 .duration(124)
                 .mpa(MPA.builder()
                         .id(2)
-                        .name("PG").build()).build();
+                        .name("PG").build())
+                .build();
         controller.addFilm(film);
         controller.addFilm(film1);
+        directorStorage.addDirector(Director.builder().name("Jon Favreau").build());
+        directorStorage.addDirector(Director.builder().name("Sam Raimi").build());
+        film.setDirectors(Collections.singletonList(Director.builder().id(1).name("Jon Favreau").build()));
+        film1.setDirectors(Collections.singletonList(Director.builder().id(2).name("Sam Raimi").build()));
+        directorStorage.updateDirectorOfFilms(film);
+        directorStorage.updateDirectorOfFilms(film1);
     }
 
     @Test
@@ -97,5 +107,34 @@ public class FilmDbStorageTest {
 
         assertThat(films.get(0).getName()).isEqualTo("Iron Man");
         assertThat(films.get(1).getName()).isEqualTo("Spider Man");
+    }
+
+    @Test
+    public void deleteFilmById() {
+        // Given
+
+        // When
+        controller.deleteFilmById(1);
+        controller.deleteFilmById(2);
+        // Then
+        assertThat(controller.getFilms()).isEqualTo(new ArrayList<>());
+    }
+
+    @Test
+    public void testSearchByTitle() {
+        List<Film> searchByTitle = new ArrayList<>(controller.search("irOn", List.of("title")));
+        assertThat(searchByTitle.get(0).getName().equals("Iron Man"));
+    }
+
+    @Test
+    public void testSearchByDirector() {
+        List<Film> searchByDirector = new ArrayList<>(controller.search("sAm", List.of("director")));
+        assertThat(searchByDirector.get(0).getName().equals("Spider Man"));
+    }
+
+    @Test
+    public void testSearchByTitleAndDirector() {
+        List<Film> searchByTitleAndDirector = new ArrayList<>(controller.search("sPi", List.of("director", "title")));
+        assertThat(searchByTitleAndDirector.get(0).getName().equals("Spider Man"));
     }
 }
