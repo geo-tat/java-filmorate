@@ -18,6 +18,7 @@ import java.util.Collection;
 public class FriendsDbStorage implements FriendsStorage {
 
     private final JdbcTemplate jdbcTemplate;
+    private final UserMapper mapper;
 
     @Override
     public void addFriend(User user, User friend) {
@@ -38,7 +39,7 @@ public class FriendsDbStorage implements FriendsStorage {
                 "JOIN user_friend AS u1 ON u.user_id = u1.friend_id " +
                 "JOIN user_friend AS u2 ON u1.friend_id = u2.friend_id " +
                 "WHERE u1.user_id = ? AND u2.user_id = ?";
-        return jdbcTemplate.query(sql, new UserMapper(), userId, friendId);
+        return jdbcTemplate.query(sql, mapper, userId, friendId);
     }
 
     @Override
@@ -47,6 +48,6 @@ public class FriendsDbStorage implements FriendsStorage {
                 "FROM user_friend AS f " +
                 "LEFT JOIN users AS u ON f.friend_id = u.user_id " +
                 "WHERE f.user_id = ? ";
-        return new ArrayList<>(jdbcTemplate.query(sql, new UserMapper(), id));
+        return new ArrayList<>(jdbcTemplate.query(sql, mapper, id));
     }
 }

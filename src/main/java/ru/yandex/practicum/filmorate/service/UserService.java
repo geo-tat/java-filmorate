@@ -49,8 +49,7 @@ public class UserService {
     }
 
     public boolean deleteUserById(int id) {
-        User userToDelete = storage.getUserById(id);
-        return storage.deleteUserById(id);
+        return storage.deleteUserById(storage.getUserById(id).getId());
     }
 
     public void addFriend(int userId, int friendId) {
@@ -68,14 +67,11 @@ public class UserService {
     }
 
     public Collection<User> getCommonFriends(int userId, int friendId) {
-        User user = storage.getUserById(userId);
-        User friend = storage.getUserById(friendId);
-        return friendStorage.getCommonFriends(userId, friendId);
+        return friendStorage.getCommonFriends(storage.getUserById(userId).getId(), storage.getUserById(friendId).getId());
     }
 
     public Collection<User> getFriends(int id) {
-        User user = storage.getUserById(id);
-        return friendStorage.getFriends(id);
+        return friendStorage.getFriends(storage.getUserById(id).getId());
     }
 
     private void userValidation(User user) {
