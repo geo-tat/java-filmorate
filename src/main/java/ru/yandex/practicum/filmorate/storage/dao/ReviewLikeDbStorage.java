@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -9,7 +8,6 @@ import ru.yandex.practicum.filmorate.storage.ReviewLikeStorage;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component
-@Slf4j
 public class ReviewLikeDbStorage implements ReviewLikeStorage {
     private final JdbcTemplate jdbcTemplate;
 
