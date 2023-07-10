@@ -1,5 +1,7 @@
-# java-filmorate
-Template repository for Filmorate project.
+
+# java-filmorate. Спринт 12: Групповой проект
+
+---
 
 
 ## Состав команды
@@ -36,3 +38,5 @@ Template repository for Filmorate project.
 
 
 ## Структура базы данных
+![Filmorate Database Diagram](er.png)
+

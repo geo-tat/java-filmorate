@@ -52,7 +52,8 @@ public class ReviewService {
     }
 
     public Collection<Review> getReviewsByFilm(int count, Integer filmId) {
-        return storage.getReviewsByFilm(count, filmId).stream()
+        return storage.getReviewsByFilm(count, filmId)
+                .stream()
                 .sorted(Comparator.comparingInt(Review::getUseful).reversed())
                 .collect(Collectors.toList());
 
@@ -60,22 +61,22 @@ public class ReviewService {
 
     public void addLikeToReview(int id, int userId) {
         likeDbStorage.addLikeToReview(id, userId, true);
-        storage.updateUseful(id, true);
+        storage.updateUseful(id);
     }
 
     public void addDislikeToReview(int id, int userId) {
         likeDbStorage.addLikeToReview(id, userId, false);
-        storage.updateUseful(id, false);
+        storage.updateUseful(id);
     }
 
     public void deleteLikeToReview(int id, int userId) {
         likeDbStorage.deleteLikeToReview(id, userId, true);
-        storage.updateUseful(id, false);
+        storage.updateUseful(id);
     }
 
     public void deleteDislikeToReview(int id, int userId) {
         likeDbStorage.deleteLikeToReview(id, userId, false);
-        storage.updateUseful(id, true);
+        storage.updateUseful(id);
     }
 
     private void validation(Review review) {
