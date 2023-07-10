@@ -1,6 +1,8 @@
+
 # java-filmorate. Спринт 12: Групповой проект
 
 ---
+
 
 ## Состав команды
 
@@ -36,5 +38,5 @@
 
 
 ## Структура базы данных
+![Filmorate Database Diagram](er.png)
 
-![Filmorate Database Diagram](/er.png)
