@@ -206,7 +206,7 @@ public class FilmDbStorage implements FilmStorage {
                 "                                       WHERE LOWER(name) LIKE LOWER(?))) " +
                 "GROUP BY f.film_id " +
                 "ORDER BY rate DESC";
-
+        System.out.println();
         return jdbcTemplate.query(sql, mapper, "%" + query + "%");
     }
 }

@@ -2,7 +2,7 @@
 Template repository for Filmorate project.
 
 
-## Состав команды
+## Состав команды проекта
 
 - [Георгий Татевосян](https://github.com/geo-tat) - тим лид
 - [Дарья Серова](https://github.com/dserova)
