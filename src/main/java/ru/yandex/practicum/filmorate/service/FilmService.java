@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Operation;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dao.*;
 
 import java.time.LocalDate;
@@ -38,16 +37,12 @@ public class FilmService {
     }
 
     public void addLike(int filmID, int userID) {
-        Film film = storage.getFilmById(filmID);
-        User user1 = user.getUserById(userID);
-        likeDbStorage.addLike(filmID, userID);
+        likeDbStorage.addLike(storage.getFilmById(filmID).getId(), user.getUserById(userID).getId());
         feedDbStorage.addFeed(userID, filmID, EventType.LIKE, Operation.ADD);
     }
 
     public void removeLike(int filmID, int userID) {
-        Film film = storage.getFilmById(filmID);
-        User user1 = user.getUserById(userID);
-        likeDbStorage.removeLike(filmID, userID);
+        likeDbStorage.removeLike(storage.getFilmById(filmID).getId(), user.getUserById(userID).getId());
         feedDbStorage.addFeed(userID, filmID, EventType.LIKE, Operation.REMOVE);
     }
 
@@ -90,8 +85,7 @@ public class FilmService {
     }
 
     public boolean deleteFilmById(int filmId) {
-        Film filmToDelete = storage.getFilmById(filmId);
-        return storage.deleteFilmById(filmId);
+        return storage.deleteFilmById(storage.getFilmById(filmId).getId());
     }
 
     public Collection<Film> search(String query, List<String> by) {

@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS users
 (
     user_id  int PRIMARY KEY AUTO_INCREMENT,
@@ -48,7 +49,7 @@ CREATE TABLE IF NOT EXISTS user_friend
     friend_id    int,
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
     FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    UNIQUE (user_id, friend_id)
+    CONSTRAINT pk_user_friend PRIMARY KEY (user_id, friend_id)
     );
 
 CREATE TABLE IF NOT EXISTS film_user_like
@@ -106,7 +107,8 @@ CREATE TABLE IF NOT EXISTS review_like_dislike
             ON DELETE CASCADE,
         CONSTRAINT fk_users_like FOREIGN KEY (user_id)
             REFERENCES users(user_id)
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
+            UNIQUE (review_id, user_id)
     );
 
 CREATE TABLE IF NOT EXISTS feed
