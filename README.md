@@ -1,40 +1,53 @@
-# java-filmorate. Спринт 12: Групповой проект
+# java-filmorate
 
----
+An application that helps you decide which movie to watch in the evening. It's a social network that allows users to add movies, like/dislike them, receive recommendations, and find friends based on their interests. Movies within the application are categorized by genres and MPAA ratings.
 
-## Состав команды
+### Stack
+- Java 11
+- Spring Boot
+- Lombok
+- Maven
+- Junit
+- JDBC
+- SQL
+- H2
 
-- [Георгий Татевосян](https://github.com/geo-tat) - тим лид
-- [Дарья Серова](https://github.com/dserova)
-- [Руслан Захаров](https://github.com/14winter)
-- [Ольга Образцова](https://github.com/olgaobraztsova)
+### Functionality:
+- Creation, editing, and deletion of user profiles
+- Retrieval of a list of all users
+- Adding/removing friends
+- Retrieval of a user's list of friends
+- Retrieval of a list of mutual friends between two users
+- Retrieval of ratings and getting a rating by ID
+- Retrieval of genres and getting a genre by ID
+- Creation and editing of movie cards
+- Ability to like/dislike a movie
+- Retrieval of a list of all movies
+- Retrieval of a movie by ID
+- Retrieval of a list of most popular movies
 
-## Распределение задач ([Доска](https://github.com/users/geo-tat/projects/1))
+## Team Composition for Gaining Experience in Group Project:
 
-- Георгий:
-- [x] Функциональность "Удаление фильмов и пользователей"
-- [x] Функциональность "Отзывы"
-- Ольга:
-- [x] Функциональность "Рекомендации"
-- [x] Функциональность "Поиск"
-- Дарья:
-- [x] Функциональность "Популярные фильмы"
-- [x] Функциональность "Фильмы по режиссерам"
-- Руслан
-- [x] Функциональность "Лента событий"
-- [x] Функциональность "Общие фильмы"
+- [Georgii Tatevosian](https://github.com/geo-tat) - Team Lead
+- [Daria Serova](https://github.com/dserova)
+- [Ruslan Zakharov](https://github.com/14winter)
+- [Olga Obraztsova](https://github.com/olgaobraztsova)
 
-## Реализация
-- Для реализации функциональности по режиссерам добавлен класс Director, и соответствующие контроллер, сервис и хранилище;
-- Для реализации функциональности по Ленте событий добавлен класс Feed и соответствующее хранилище
-- Для реализации функциональности по отзывам добавлен класс Review, соответствующие контроллер сервис, хранилище;
-- Функциональность по рекомендациям добавлена в существующий класс LikeDbStorage, эндпоинт обрабатывается в FilmController;
-- Функциональность по поиску добавлена в существующий класс FilmDbStorage, эндпоинт обрабатывается в FilmController;
-- Функциональность по удалению фильмов и пользователей реализована в существующих классах FilmDbStorage и UserDbStorage;
-- Функциональность по общим фильмам реализована в существующем классе FilmDbStorage, и эндпоинт обрабатывается в FilmController;
-- Функциональность по популярным фильмам реализована в существующем классе LikeDbStorage, и эндпоинт обрабатывается в FilmController;
+## Task Distribution for Additional Features ([Board](https://github.com/users/geo-tat/projects/1))
 
+- Georgiy:
+    - [x] "Deletion of Movies and Users" Functionality
+    - [x] "Reviews" Functionality
+- Olga:
+    - [x] "Recommendations" Functionality
+    - [x] "Search" Functionality
+- Daria:
+    - [x] "Popular Movies" Functionality
+    - [x] "Movies by Directors" Functionality
+- Ruslan:
+    - [x] "Activity Feed" Functionality
+    - [x] "Shared Movies" Functionality
 
-## Структура базы данных
+## Database Structure
 
-![Filmorate Database Diagram](/er.png)
+![Filmorate Database Diagram](ER.png)
